@@ -11,7 +11,7 @@ class HomeController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('Welcome', [
+        return Inertia::render('Home/index', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'background' => asset('images/background.jpg'),
@@ -20,6 +20,19 @@ class HomeController extends Controller
 
     public function aboutUs(): Response
     {
-        return Inertia::render('Home/about-us');
+        return Inertia::render('Home/about-us', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'background' => asset('images/background.jpg'),
+        ]);
+    }
+
+    public function contactUs(): Response
+    {
+        return Inertia::render('Home/contact-us', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'background' => asset('images/background.jpg'),
+        ]);
     }
 }

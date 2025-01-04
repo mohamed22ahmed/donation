@@ -7,14 +7,11 @@ import TextInput from '@/Components/TextInput.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
-    email: {
-        type: String,
-        required: true,
-    },
-    token: {
-        type: String,
-        required: true,
-    },
+    email: String,
+    token: String,
+    canLogin: Boolean,
+    canRegister: Boolean,
+    background: String,
 });
 
 const form = useForm({
@@ -32,9 +29,10 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Reset Password" />
-
+  <Head title="Reset Password" />
+  <GuestLayout :can-login="canLogin" :can-register="canRegister" :background="background">
+    <div class="flex justify-end items-center h-screen px-4">
+      <div class="w-full max-w-md bg-white shadow-lg p-8 rounded-md">
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="email" value="Email" />
@@ -97,5 +95,7 @@ const submit = () => {
                 </PrimaryButton>
             </div>
         </form>
+        </div>
+      </div>
     </GuestLayout>
 </template>

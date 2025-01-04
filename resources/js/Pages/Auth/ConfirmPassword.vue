@@ -10,6 +10,12 @@ const form = useForm({
     password: '',
 });
 
+defineProps({
+  canLogin: Boolean,
+  canRegister: Boolean,
+  background: String,
+});
+
 const submit = () => {
     form.post(route('password.confirm'), {
         onFinish: () => form.reset(),
@@ -18,15 +24,16 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Confirm Password" />
+      <Head title="Confirm Password" />
+      <GuestLayout :can-login="canLogin" :can-register="canRegister" :background="background">
+        <div class="flex justify-end items-center h-screen px-4">
+          <div class="w-full max-w-md bg-white shadow-lg p-8 rounded-md">
+            <div class="mb-4 text-sm text-gray-600">
+              This is a secure area of the application. Please confirm your
+              password before continuing.
+            </div>
 
-        <div class="mb-4 text-sm text-gray-600">
-            This is a secure area of the application. Please confirm your
-            password before continuing.
-        </div>
-
-        <form @submit.prevent="submit">
+            <form @submit.prevent="submit">
             <div>
                 <InputLabel for="password" value="Password" />
                 <TextInput
@@ -51,5 +58,7 @@ const submit = () => {
                 </PrimaryButton>
             </div>
         </form>
+          </div>
+        </div>
     </GuestLayout>
 </template>

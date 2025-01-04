@@ -10,10 +10,6 @@ defineProps({
 </script>
 
 <template>
-  <Head title="About" />
-  <GuestLayout :can-login="canLogin" :can-register="canRegister" :background="background">
-    <div>
-      <h1>About</h1>
-    </div>
-  </GuestLayout>
+  <Head title="Welcome" />
+  <GuestLayout :can-login="canLogin" :can-register="canRegister" :background="background"></GuestLayout>
 </template>

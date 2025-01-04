@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -18,7 +19,10 @@ class PasswordResetLinkController extends Controller
     public function create(): Response
     {
         return Inertia::render('Auth/ForgotPassword', [
-            'status' => session('status'),
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'background' => asset('images/background.jpg'),
+            'status' => session('status')
         ]);
     }
 
