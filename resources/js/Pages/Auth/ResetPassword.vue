@@ -31,7 +31,7 @@ const submit = () => {
 <template>
   <Head title="Reset Password" />
   <GuestLayout :can-login="canLogin" :can-register="canRegister" :background="background">
-    <div class="flex justify-end items-center h-screen px-4">
+    <div class="flex justify-end items-center h-screen px-4" style="width: 400px">
       <div class="w-full max-w-md bg-white shadow-lg p-8 rounded-md">
         <form @submit.prevent="submit">
             <div>

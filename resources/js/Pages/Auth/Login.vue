@@ -31,7 +31,7 @@ const submit = () => {
 <template>
   <Head title="Log in" />
   <GuestLayout :can-login="canLogin" :can-register="canRegister" :background="background">
-    <div class="flex justify-end items-center h-screen px-4">
+    <div class="flex justify-end items-center h-screen px-4" style="width: 400px">
       <div class="w-full max-w-md bg-white shadow-lg p-8 rounded-md">
         <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
           {{ status }}

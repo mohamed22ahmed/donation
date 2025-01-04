@@ -5,7 +5,6 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import Checkbox from "@/Components/Checkbox.vue";
 
 defineProps({
   canLogin: Boolean,
@@ -31,7 +30,7 @@ const submit = () => {
 <template>
   <Head title="Register" />
   <GuestLayout :can-login="canLogin" :can-register="canRegister" :background="background">
-    <div class="flex justify-end items-center h-screen px-4">
+    <div class="flex justify-end items-center h-screen px-4" style="width: 400px">
       <div class="w-full max-w-md bg-white shadow-lg p-8 rounded-md">
         <form @submit.prevent="submit">
           <div>

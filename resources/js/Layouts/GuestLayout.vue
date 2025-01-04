@@ -71,7 +71,7 @@ const getActiveClass = (routeUrl) => {
       </nav>
 
       <!-- Main Content -->
-    <div class="relative flex min-h-screen flex-col items-center justify-center">
+    <div class="relative flex min-h-screen flex-col items-end justify-center">
       <slot></slot>
     </div>
   </div>

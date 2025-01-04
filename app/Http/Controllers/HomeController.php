@@ -15,6 +15,7 @@ class HomeController extends Controller
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'background' => asset('images/background.jpg'),
+            'content' => 'This is donation application that helps people to offer medications to those in need',
         ]);
     }
 
@@ -24,6 +25,7 @@ class HomeController extends Controller
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'background' => asset('images/background.jpg'),
+            'content' => 'we are a company based on 2009 and we have been working on this project since then',
         ]);
     }
 
@@ -34,5 +36,10 @@ class HomeController extends Controller
             'canRegister' => Route::has('register'),
             'background' => asset('images/background.jpg'),
         ]);
+    }
+
+    public function contactUsSubmit(Request $request): Response
+    {
+        dd($request->all());
     }
 }
