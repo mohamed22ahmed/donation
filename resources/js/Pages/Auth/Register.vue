@@ -30,8 +30,9 @@ const submit = () => {
 <template>
   <Head title="Register" />
   <GuestLayout :can-login="canLogin" :can-register="canRegister" :background="background">
-    <div class="flex justify-end items-center h-screen px-4" style="width: 400px">
-      <div class="w-full max-w-md bg-white shadow-lg p-8 rounded-md">
+    <div class="flex justify-end items-center h-screen px-4" style="width: 800px">
+      <div class="col-md-6 w-full max-w-md bg-white shadow-lg p-8 rounded-md">
+        <h1 class="text-2xl font-bold mb-4 text-center">Register</h1>
         <form @submit.prevent="submit">
           <div>
             <InputLabel for="name" value="Name" />

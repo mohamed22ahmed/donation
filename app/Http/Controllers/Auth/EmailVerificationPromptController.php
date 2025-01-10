@@ -21,7 +21,7 @@ class EmailVerificationPromptController extends Controller
                     : Inertia::render('Auth/VerifyEmail', [
                         'canLogin' => Route::has('login'),
                         'canRegister' => Route::has('register'),
-                        'background' => asset('images/background.jpg'),
+                        'background' => asset('images/1.jpg'),
                         'status' => session('status')
                     ]);
     }

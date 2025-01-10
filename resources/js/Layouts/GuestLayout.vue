@@ -1,10 +1,10 @@
 <script setup>
-import {Link, usePage} from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 
 defineProps({
   canLogin: Boolean,
   canRegister: Boolean,
-  background: String
+  background: String,
 });
 
 const { url } = usePage();
@@ -18,60 +18,72 @@ const normalizeUrl = (fullUrl) => {
 const getActiveClass = (routeUrl) => {
   const currentPath = normalizeUrl(url);
   const targetPath = normalizeUrl(routeUrl);
-  return currentPath === targetPath ? 'bg-black/50 ring-black text-white' : '';
+  return currentPath === targetPath ? 'bg-gray-700 text-white' : 'text-gray-700';
 };
 </script>
 
 <template>
-  <div class="relative min-h-screen bg-cover bg-center" :style="`background-image: url('${background}');`">
-    <nav class="absolute top-4 left-4 flex space-x-4 text-black z-10">
-      <Link
-          :href="route('home')"
-          :class="getActiveClass(route('home'))"
-          class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:bg-black/50"
-      >
-        Home
-      </Link>
-      <Link
-          :href="route('about')"
-          :class="getActiveClass(route('about'))"
-          class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:bg-black/50"
-      >
-        About Us
-      </Link>
-      <Link
-          :href="route('contact')"
-          :class="getActiveClass(route('contact'))"
-          class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:bg-black/50"
-      >
-        Contact Us
-      </Link>
+  <div class="relative min-h-screen" :style="`background-image: url('${background}'); background-size: cover; background-position: center;`">
+    <!-- Navbar -->
+    <nav class="absolute top-0 left-0 w-full bg-gray-100 shadow-md z-10">
+      <div class="max-w-7xl mx-auto flex items-center h-16">
+        <!-- Left Links -->
+        <div class="flex space-x-4 flex-grow">
+          <Link
+              :href="route('home')"
+              :class="`rounded-md px-3 py-2 ${getActiveClass(route('home'))}`"
+              class="ring-1 ring-transparent transition hover:bg-gray-700 hover:text-white"
+          >
+            Home
+          </Link>
+          <Link
+              :href="route('about')"
+              :class="`rounded-md px-3 py-2 ${getActiveClass(route('about'))}`"
+              class="ring-1 ring-transparent transition hover:bg-gray-700 hover:text-white"
+          >
+            About Us
+          </Link>
+          <Link
+              :href="route('contact')"
+              :class="`rounded-md px-3 py-2 ${getActiveClass(route('contact'))}`"
+              class="ring-1 ring-transparent transition hover:bg-gray-700 hover:text-white"
+          >
+            Contact Us
+          </Link>
+        </div>
+
+        <!-- Right Links -->
+        <div class="flex justify-end space-x-4">
+          <Link
+              v-if="$page.props.auth.user"
+              :href="route('dashboard')"
+              :class="`rounded-md px-3 py-2 ${getActiveClass(route('dashboard'))}`"
+              class="ring-1 ring-transparent transition hover:bg-gray-700 hover:text-white"
+          >
+            Dashboard
+          </Link>
+          <template v-else>
+            <Link
+                v-if="canLogin"
+                :href="route('login')"
+                :class="`rounded-md px-3 py-2 ${getActiveClass(route('login'))}`"
+                class="ring-1 ring-transparent transition hover:bg-gray-700 hover:text-white"            >
+              Log in
+            </Link>
+            <Link
+                v-if="canRegister"
+                :href="route('register')"
+                :class="`rounded-md px-3 py-2 ${getActiveClass(route('register'))}`"
+                class="ring-1 ring-transparent transition hover:bg-gray-700 hover:text-white"            >
+              Register
+            </Link>
+          </template>
+        </div>
+      </div>
     </nav>
-      <nav class="absolute top-4 right-4 flex space-x-4 text-white z-10">
-        <Link v-if="$page.props.auth.user" :href="route('dashboard')" class="rounded-md px-3 py-2 text-white bg-black/30 ring-1 ring-transparent transition hover:bg-black/50">
-          Dashboard
-        </Link>
 
-        <template v-else>
-          <Link
-              v-if="canLogin"
-              :href="route('login')"
-              class="rounded-md px-3 py-2 text-white bg-black/30 ring-1 ring-transparent transition hover:bg-black/50"
-          >
-            Log in
-          </Link>
-          <Link
-              v-if="canRegister"
-              :href="route('register')"
-              class="rounded-md px-3 py-2 text-white bg-black/30 ring-1 ring-transparent transition hover:bg-black/50"
-          >
-            Register
-          </Link>
-        </template>
-      </nav>
-
-      <!-- Main Content -->
-    <div class="relative flex min-h-screen flex-col items-end justify-center">
+    <!-- Main Content -->
+    <div class="relative flex min-h-screen flex-col items-center justify-center pt-16">
       <slot></slot>
     </div>
   </div>

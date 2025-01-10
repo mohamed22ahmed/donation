@@ -15,7 +15,6 @@ class HomeController extends Controller
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'background' => asset('images/background.jpg'),
-            'content' => 'This is donation application that helps people to offer medications to those in need',
         ]);
     }
 
@@ -24,8 +23,7 @@ class HomeController extends Controller
         return Inertia::render('Home/about-us', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
-            'background' => asset('images/background.jpg'),
-            'content' => 'we are a company based on 2009 and we have been working on this project since then',
+            'background' => asset('images/2.jpg'),
         ]);
     }
 
@@ -34,7 +32,7 @@ class HomeController extends Controller
         return Inertia::render('Home/contact-us', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
-            'background' => asset('images/background.jpg'),
+            'background' => asset('images/1.jpg'),
         ]);
     }
 
