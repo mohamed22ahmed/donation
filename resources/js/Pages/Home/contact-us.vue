@@ -5,9 +5,8 @@ import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import Textarea from "@/Components/Textarea.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import Checkbox from "@/Components/Checkbox.vue";
+import '@fortawesome/fontawesome-free/css/all.css';
 
 defineProps({
   canLogin: Boolean,
@@ -117,6 +116,19 @@ const getActiveClass = (routeUrl) => {
       <div class="col-md-6" style="width: 600px; margin: 10px; text-align: center; line-height: 75px; font-size: 30px">
         <div class="col-md-6 w-full max-w-md bg-white shadow-lg p-8 rounded-md">
           <h1 class="text-2xl font-bold mb-4 text-center">Contact Us</h1>
+          <div class="row">
+            <span class="inline-flex rounded-md">
+              <a href="https://www.facebook.com/profile.php?id=100026411469268" target="_blank" style="margin-left:10px;color: #2563eb">
+                <i class="fab fa-facebook"></i>
+              </a>
+              <a href="https://www.linkedin.com/in/mohamed-hammam-1225ab17a/" target="_blank" style="margin-left:10px;color: #2563eb">
+                <i class="fab fa-linkedin"></i>
+              </a>
+              <a href="https://web.whatsapp.com/" target="_blank" style="margin-left:10px;color: springgreen">
+                <i class="fab fa-whatsapp"></i>
+              </a>
+            </span>
+          </div>
           <form @submit.prevent="submit">
             <div class="mt-4">
               <InputLabel for="name" value="Name" class="text-left" />
