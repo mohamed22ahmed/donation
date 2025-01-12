@@ -7,6 +7,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import Textarea from "@/Components/Textarea.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import Checkbox from "@/Components/Checkbox.vue";
 
 defineProps({
   canLogin: Boolean,
@@ -41,8 +42,7 @@ const getActiveClass = (routeUrl) => {
 
 <template>
   <Head title="Contact Us"/>
-  <div class="relative min-h-screen"
-       :style="`background-image: url('${background}'); background-size: cover; background-position: center;`">
+  <div class="relative min-h-screen" :style="`background-image: url('${background}'); background-size: cover; background-position: center;`">
     <nav class="absolute top-0 left-0 w-full bg-gray-100 shadow-md z-10">
       <div class="max-w-7xl mx-auto flex items-center h-16">
         <!-- Left Links -->
@@ -101,69 +101,78 @@ const getActiveClass = (routeUrl) => {
     </nav>
 
     <!-- Main Content -->
-    <div class="relative flex min-h-screen flex-col items-center justify-center pt-16">
+    <div class="justify-end  h-screen items-center" style="display: flex; flex-direction: row; justify-content: space-around;">
+      <div class="col-md-6" style="width: 600px; margin: 10px; text-align: center;">
+        <h1 style="font-size: 40px">keep in Touch</h1>
+        <p style="font-size: 22px">
+          We'd love to hear from you!
+          Whether you have a question, feedback, feel free to reach out.
+          We are here to assist you and will get back to you as soon as possible.
+        </p>
+        <p class="mt-5" style="font-size: 22px">
+          Please fill out this form , and we'll respond to your as soon as possible.
+        </p>
+      </div>
 
-      <div class="flex justify-center h-screen">
-        <div class="flex justify-end items-center h-screen px-4" style="width: 800px">
-            <div class="col-md-6 w-full max-w-md bg-white shadow-lg p-8 rounded-md">
-              <h1 class="text-2xl font-bold mb-4 text-center">Contact Us</h1>
-              <form @submit.prevent="submit">
-                <div class="mt-4">
-                  <InputLabel for="name" value="Name" />
-                  <TextInput
-                      id="name"
-                      type="text"
-                      class="mt-1 block w-full"
-                      v-model="form.name"
-                      placeholder="Enter Your Name"
-                      required
-                      autocomplete="name"
-                  />
-                  <InputError class="mt-2" :message="form.errors.name" />
-                </div>
-
-                <!-- Email Field -->
-                <div class="mt-4">
-                  <InputLabel for="email" value="Email" />
-                  <TextInput
-                      id="email"
-                      type="email"
-                      class="mt-1 block w-full"
-                      v-model="form.email"
-                      placeholder="Enter Your Email"
-                      required
-                      autocomplete="username"
-                  />
-                  <InputError class="mt-2" :message="form.errors.email" />
-                </div>
-
-                <!-- Message Field -->
-                <div class="mt-4">
-                  <InputLabel for="message" value="Message" />
-                  <Textarea
-                      v-model="form.message"
-                      id="message"
-                      class="mt-1 block w-full"
-                      required
-                      autocomplete="on"
-                      aria-placeholder="Write Your Message"
-                      style="height: 150px"
-                      placeholder="Write Your Message"
-                  />
-                  <InputError class="mt-2" :message="form.errors.message" />
-                </div>
-
-                <div class="mt-4 flex items-center justify-center">
-                  <PrimaryButton
-                      class="ms-4"
-                      :class="{ 'opacity-25': form.processing }"
-                      :disabled="form.processing"
-                  >
-                    Submit
-                  </PrimaryButton>
-                </div>
-              </form>
+      <div class="col-md-6" style="width: 600px; margin: 10px; text-align: center; line-height: 75px; font-size: 30px">
+        <div class="col-md-6 w-full max-w-md bg-white shadow-lg p-8 rounded-md">
+          <h1 class="text-2xl font-bold mb-4 text-center">Contact Us</h1>
+          <form @submit.prevent="submit">
+            <div class="mt-4">
+              <InputLabel for="name" value="Name" class="text-left" />
+              <TextInput
+                  id="name"
+                  type="text"
+                  class="mt-1 block w-full"
+                  v-model="form.name"
+                  placeholder="Enter Your Name"
+                  required
+                  autocomplete="name"
+              />
+              <InputError class="mt-2" :message="form.errors.name" />
             </div>
+
+            <!-- Email Field -->
+            <div class="mt-4">
+              <InputLabel for="email" value="Email" class="text-left" />
+              <TextInput
+                  id="email"
+                  type="email"
+                  class="mt-1 block w-full"
+                  v-model="form.email"
+                  placeholder="Enter Your Email"
+                  required
+                  autocomplete="username"
+              />
+              <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <!-- Message Field -->
+            <div class="mt-4">
+              <InputLabel for="message" value="Message" class="text-left" />
+              <Textarea
+                  v-model="form.message"
+                  id="message"
+                  class="mt-1 block w-full"
+                  required
+                  autocomplete="on"
+                  aria-placeholder="Write Your Message"
+                  style="height: 150px"
+                  placeholder="Write Your Message"
+              />
+              <InputError class="mt-2" :message="form.errors.message" />
+            </div>
+
+            <div class="mt-4 flex items-center justify-center">
+              <PrimaryButton
+                  class="ms-4"
+                  :class="{ 'opacity-25': form.processing }"
+                  :disabled="form.processing"
+              >
+                Submit
+              </PrimaryButton>
+            </div>
+          </form>
         </div>
       </div>
     </div>
