@@ -86,9 +86,9 @@ const getActiveClass = (routeUrl) => {
 
     <!-- Main Content -->
     <div class="relative flex min-h-screen flex-col items-end justify-center pt-16">
-      <div class="flex justify-end h-screen">
+      <div class="flex justify-center h-screen">
         <div class="text-center max-w-md m-auto">
-          <p class="text-2xl font-bold mb-4" style="font-size: 2rem">Welcome to PharmaBridge community </p>
+          <p class="text-xl font-bold" style="font-size: 3rem">Welcome to </p><span style="font-size: 4rem"> PharmaBridge </span><p class="text-xl font-bold" style="font-size: 3rem"> community </p>
         </div>
       </div>
     </div>
