@@ -118,7 +118,7 @@ const getActiveClass = (routeUrl) => {
           <h1 class="text-2xl font-bold mb-4 text-center">Contact Us</h1>
           <div class="row">
             <span class="inline-flex rounded-md">
-              <a href="https://www.facebook.com/profile.php?id=100026411469268" target="_blank" style="margin-left:10px;color: #2563eb">
+              <a href="https://www.facebook.com/shahd.alaa.58555941?rdid=OMQtY0Et5BCCWQIs" target="_blank" style="margin-left:10px;color: #2563eb">
                 <i class="fab fa-facebook"></i>
               </a>
               <a href="https://www.linkedin.com/in/mohamed-hammam-1225ab17a/" target="_blank" style="margin-left:10px;color: #2563eb">
