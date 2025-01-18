@@ -17,7 +17,7 @@ Route::controller(MedicationsController::class)
     ->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/store', 'store')->name('store');
-        Route::post('/update/{id}', 'update')->name('update');
+        Route::post('/update', 'update')->name('update');
     });
 
 //Route::resource('offers', MedicationsController::class)->middleware(['auth', 'verified']);

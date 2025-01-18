@@ -3,11 +3,13 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import "@fortawesome/fontawesome-free/css/all.css";
 import ShowMedicationModal from "@/Pages/Medications/showMedicationModal.vue";
+import EditMedicationModal from "@/Pages/Medications/editMedicationModal.vue";
 export default {
   components: {
     AuthenticatedLayout,
     Head,
     ShowMedicationModal,
+    EditMedicationModal,
   },
 
   props: {
@@ -18,6 +20,8 @@ export default {
     return {
       selectedMedication: {},
       isModalOpen: false,
+      isEditMedicationOpen: false,
+      isAddMedicationOpen: false,
     };
   },
 
@@ -29,11 +33,19 @@ export default {
 
     closeModal() {
       this.isModalOpen = false;
+      this.isEditMedicationOpen = false;
+      this.isAddMedicationOpen = false;
       this.selectedMedication = {};
     },
 
     editMedicationModal(medication) {
-      console.log("Edit medication:", medication);
+      this.selectedMedication = medication;
+      this.isEditMedicationOpen = true;
+    },
+
+    addMedicationModal() {
+      this.selectedMedication = {};
+      this.isAddMedicationOpen = true;
     },
 
     deleteMedicationModal(medication) {
@@ -109,6 +121,20 @@ export default {
 
   <ShowMedicationModal
       v-if="isModalOpen"
+      :medication="selectedMedication"
+      @close="closeModal"
+  />
+
+  <EditMedicationModal
+      v-if="isEditMedicationOpen"
+      :editMode="true"
+      :medication="selectedMedication"
+      @close="closeModal"
+  />
+
+  <EditMedicationModal
+      v-if="isAddMedicationOpen"
+      :editMode="false"
       :medication="selectedMedication"
       @close="closeModal"
   />

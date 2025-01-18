@@ -32,7 +32,7 @@ class MedicationsController extends Controller
         dd('store function', $request->all());
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         dd('update function', $request->all());
     }
