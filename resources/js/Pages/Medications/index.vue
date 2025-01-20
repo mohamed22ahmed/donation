@@ -5,6 +5,7 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import ShowMedicationModal from "@/Pages/Medications/showMedicationModal.vue";
 import EditMedicationModal from "@/Pages/Medications/editMedicationModal.vue";
 import AddMedicationModal from "@/Pages/Medications/addMedicationModal.vue";
+import DeleteMedicationModal from "@/Pages/Medications/deleteMedicationModal.vue";
 export default {
   components: {
     AuthenticatedLayout,
@@ -12,6 +13,7 @@ export default {
     ShowMedicationModal,
     EditMedicationModal,
     AddMedicationModal,
+    DeleteMedicationModal,
   },
 
   props: {
@@ -24,6 +26,7 @@ export default {
       isModalOpen: false,
       isEditMedicationOpen: false,
       isAddMedicationOpen: false,
+      isDeleteMedicationOpen: false,
     };
   },
 
@@ -37,6 +40,7 @@ export default {
       this.isModalOpen = false;
       this.isEditMedicationOpen = false;
       this.isAddMedicationOpen = false;
+      this.isDeleteMedicationOpen = false;
       this.selectedMedication = {};
     },
 
@@ -54,7 +58,8 @@ export default {
 
     deleteMedicationModal(medication) {
       this.closeModal();
-      console.log("Delete medication:", medication);
+      this.selectedMedication = medication;
+      this.isDeleteMedicationOpen = true;
     },
   },
 };
@@ -116,7 +121,7 @@ export default {
               <button
                   type="button"
                   @click="showMedicationModal(medication)"
-                  class="pl-3 text-red-500 text-lg hover:text-gray-500"
+                  class="pl-3 text-green-500 text-lg hover:text-gray-500"
               >
                 <i class="fa-solid fa-eye"></i>
               </button>
@@ -157,6 +162,12 @@ export default {
 
   <AddMedicationModal
       v-if="isAddMedicationOpen"
+      :medication="selectedMedication"
+      @close="closeModal"
+  />
+
+  <DeleteMedicationModal
+      v-if="isDeleteMedicationOpen"
       :medication="selectedMedication"
       @close="closeModal"
   />

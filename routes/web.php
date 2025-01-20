@@ -32,6 +32,7 @@ Route::middleware(['auth', 'verified'])
                 Route::get('/', 'index')->name('index');
                 Route::post('/store', 'store')->name('store');
                 Route::post('/update', 'update')->name('update');
+                Route::get('/delete/{id}', 'delete')->name('delete');
             });
     });
 

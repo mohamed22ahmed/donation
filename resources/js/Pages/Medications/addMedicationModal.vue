@@ -53,7 +53,7 @@ export default {
               class="btn-close"
               @click="$emit('close')"
               aria-label="Close"
-          ></button>
+          >x</button>
         </div>
 
         <div class="modal-body">
@@ -114,7 +114,7 @@ export default {
 
             <!-- Modal Footer -->
             <div class="modal-footer border-top-0">
-              <button type="button" class="btn btn-secondary" @click="$emit('close')">Close</button>
+              <button type="button" class="btn btn-danger" @click="$emit('close')">Close</button>
               <button type="submit" class="btn btn-primary">Add</button>
             </div>
           </form>

@@ -36,4 +36,9 @@ class MedicationsController extends Controller
     {
         dd('update function', $request->all());
     }
+
+    public function delete($id)
+    {
+        dd('delete function', $id);
+    }
 }
