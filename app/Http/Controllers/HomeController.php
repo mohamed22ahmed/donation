@@ -11,29 +11,17 @@ class HomeController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('Home/index', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'background' => asset('images/background.jpg'),
-        ]);
+        return Inertia::render('Home/index', $this->returnedResponse('background.jpg'));
     }
 
     public function aboutUs(): Response
     {
-        return Inertia::render('Home/about-us', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'background' => asset('images/2.jpg'),
-        ]);
+        return Inertia::render('Home/about-us', $this->returnedResponse('2.jpg'));
     }
 
     public function contactUs(): Response
     {
-        return Inertia::render('Home/contact-us', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'background' => asset('images/1.jpg'),
-        ]);
+        return Inertia::render('Home/contact-us', $this->returnedResponse('1.jpg'));
     }
 
     public function contactUsSubmit(Request $request): Response
@@ -44,5 +32,14 @@ class HomeController extends Controller
     public function dashboard(): Response
     {
         return Inertia::render('Dashboard');
+    }
+
+    private function returnedResponse($image): array
+    {
+        return [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'background' => asset("images/$image"),
+        ];
     }
 }
