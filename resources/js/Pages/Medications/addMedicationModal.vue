@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "editMedicationModal",
+  name: "addMedicationModal",
   props: ['medication'],
 
   data() {
@@ -20,16 +20,16 @@ export default {
   },
 
   mounted() {
-    $('#editMedication').modal('show');
+    $('#addMedication').modal('show');
   },
 
   beforeUnmount() {
-    $('#editMedication').modal('hide');
+    $('#addMedication').modal('hide');
   },
 
   methods: {
-    updateMedication() {
-      this.$inertia.post('/medications/update', this.form);
+    createMedication() {
+      this.$inertia.post('/medications/store', this.form);
     }
   }
 };
@@ -37,7 +37,7 @@ export default {
 
 <template>
   <div
-      id="editMedication"
+      id="addMedication"
       class="modal fade"
       tabindex="-1"
       role="dialog"
@@ -47,7 +47,7 @@ export default {
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header bg-light">
-          <h5 class="modal-title" id="addNewLabel">Edit Medication</h5>
+          <h5 class="modal-title" id="addNewLabel">Add Medication</h5>
           <button
               type="button"
               class="btn-close"
@@ -57,7 +57,7 @@ export default {
         </div>
 
         <div class="modal-body">
-          <form @submit.prevent="updateMedication()" enctype="multipart/form-data">
+          <form @submit.prevent="createMedication()" enctype="multipart/form-data">
             <div class="row mb-3">
               <div class="col-md-6">
                 <label for="name" class="form-label">Name</label>
@@ -115,7 +115,7 @@ export default {
             <!-- Modal Footer -->
             <div class="modal-footer border-top-0">
               <button type="button" class="btn btn-secondary" @click="$emit('close')">Close</button>
-              <button type="submit" class="btn btn-success">Update</button>
+              <button type="submit" class="btn btn-primary">Add</button>
             </div>
           </form>
         </div>

@@ -4,12 +4,14 @@ import { Head } from "@inertiajs/vue3";
 import "@fortawesome/fontawesome-free/css/all.css";
 import ShowMedicationModal from "@/Pages/Medications/showMedicationModal.vue";
 import EditMedicationModal from "@/Pages/Medications/editMedicationModal.vue";
+import AddMedicationModal from "@/Pages/Medications/addMedicationModal.vue";
 export default {
   components: {
     AuthenticatedLayout,
     Head,
     ShowMedicationModal,
     EditMedicationModal,
+    AddMedicationModal,
   },
 
   props: {
@@ -39,16 +41,19 @@ export default {
     },
 
     editMedicationModal(medication) {
+      this.closeModal();
       this.selectedMedication = medication;
       this.isEditMedicationOpen = true;
     },
 
     addMedicationModal() {
+      this.closeModal();
       this.selectedMedication = {};
       this.isAddMedicationOpen = true;
     },
 
     deleteMedicationModal(medication) {
+      this.closeModal();
       console.log("Delete medication:", medication);
     },
   },
@@ -67,6 +72,17 @@ export default {
 
     <div class="py-12">
       <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
+        <div class="float-right mb-2">
+          <button
+              type="button"
+              @click="addMedicationModal()"
+              class="pl-3 text-blue-700 text-lg hover:text-gray-500"
+              style="font-size: 22px"
+          >
+            Add New
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
         <table>
           <thead>
           <tr>
@@ -88,7 +104,14 @@ export default {
             <td>{{ medication.price }}</td>
             <td>{{ medication.total }}</td>
             <td>{{ medication.type }}</td>
-            <td>{{ medication.image }}</td>
+            <td style="justify-items: center;">
+              <img
+                :src="medication.image"
+                alt="Medication Image"
+                class="img-fluid"
+                style="height: 100px; width: 120px; object-fit: contain"
+              />
+            </td>
             <td>
               <button
                   type="button"
@@ -132,9 +155,8 @@ export default {
       @close="closeModal"
   />
 
-  <EditMedicationModal
+  <AddMedicationModal
       v-if="isAddMedicationOpen"
-      :editMode="false"
       :medication="selectedMedication"
       @close="closeModal"
   />
@@ -150,6 +172,7 @@ th, td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
+
 }
 
 th {
