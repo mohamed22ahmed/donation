@@ -17,7 +17,7 @@ export default {
   },
 
   props: {
-    medications: Array,
+    medications: Array
   },
 
   data() {
@@ -27,7 +27,32 @@ export default {
       isEditMedicationOpen: false,
       isAddMedicationOpen: false,
       isDeleteMedicationOpen: false,
+      showSuccessMessage: false,
+      showErrorMessage: false,
+      showMessage: false
     };
+  },
+
+  mounted() {
+    if (this.$page.props.status === 'success') {
+      this.showMessage = true
+      this.showSuccessMessage = true;
+      setTimeout(() => {
+        this.showSuccessMessage = false;
+        this.showMessage = false;
+        window.location.href = '/medications';
+      }, 2000);
+    }
+
+    if (this.$page.props.status === 'error') {
+      this.showMessage = true
+      this.showErrorMessage = true;
+      setTimeout(() => {
+        this.showErrorMessage = false;
+        this.showMessage = false;
+        window.location.href = '/medications';
+      }, 2000);
+    }
   },
 
   methods: {
@@ -74,6 +99,17 @@ export default {
         Medications List
       </h2>
     </template>
+
+    <div
+        v-if="showMessage"
+        :class="{
+          'alert': true,
+          'alert-success': showSuccessMessage,
+          'alert-danger': showErrorMessage
+        }"
+    >
+      {{ $page.props.message }}
+    </div>
 
     <div class="py-12">
       <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
