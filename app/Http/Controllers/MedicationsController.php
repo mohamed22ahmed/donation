@@ -10,6 +10,7 @@ class MedicationsController extends Controller
 {
     public function index(): Response
     {
+        // replace with medication resource
         $medications = Medication::where('user_id', auth()->user()->id)->get()->map(function ($medication) {
             return [
                 'id' => $medication['id'],
@@ -39,8 +40,8 @@ class MedicationsController extends Controller
 
     public function delete($id)
     {
-//        $deleted = Medication::where('id', $id)->delete();
-        if (true) {
+        $deleted = Medication::where('id', $id)->delete();
+        if ($deleted) {
             $medications = Medication::where('user_id', auth()->user()->id)->get()->map(function ($medication) {
                 return [
                     'id' => $medication['id'],
