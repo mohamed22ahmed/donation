@@ -21,9 +21,17 @@ export default {
 
   methods: {
     deleteMedication() {
-      this.$inertia.get('/medications/delete/'+ this.form.id);
+      this.$inertia.get(route('medications.delete', this.form.id))
+        .then(() => {
+          this.$emit('close');
+          this.showSuccessMessage('Medication deleted successfully!');
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          this.showErrorMessage('Failed to delete medication.');
+        });
     }
-  }
+  },
 };
 </script>
 

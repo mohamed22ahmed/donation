@@ -11,6 +11,7 @@ export default {
         'injection'
       ],
       form: {
+        id: this.medication.id,
         name: this.medication.name,
         price: this.medication.price,
         quantity: this.medication.quantity,
@@ -29,7 +30,16 @@ export default {
 
   methods: {
     updateMedication() {
-      this.$inertia.post('/medications/update', this.form);
+      this.$inertia.get(route('medications.update', this.form))
+          .then(() => {
+            this.$emit('close');
+            this.showSuccessMessage('Medication updated successfully!');
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            this.showErrorMessage('Failed to updated medication.');
+          });
+
     }
   }
 };

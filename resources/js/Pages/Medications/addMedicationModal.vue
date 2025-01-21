@@ -29,7 +29,15 @@ export default {
 
   methods: {
     createMedication() {
-      this.$inertia.post('/medications/store', this.form);
+      this.$inertia.get(route('medications.store', this.form))
+        .then(() => {
+          this.$emit('close');
+          this.showSuccessMessage('Medication created successfully!');
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          this.showErrorMessage('Failed to create medication.');
+        });
     }
   }
 };

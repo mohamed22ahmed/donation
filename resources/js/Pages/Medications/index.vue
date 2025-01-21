@@ -194,18 +194,21 @@ export default {
       :editMode="true"
       :medication="selectedMedication"
       @close="closeModal"
+      @afterAction="getMedications"
   />
 
   <AddMedicationModal
       v-if="isAddMedicationOpen"
       :medication="selectedMedication"
       @close="closeModal"
+      @afterAction="getMedications"
   />
 
   <DeleteMedicationModal
       v-if="isDeleteMedicationOpen"
       :medication="selectedMedication"
       @close="closeModal"
+      @afterAction="getMedications"
   />
 </template>
 
