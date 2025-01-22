@@ -27,32 +27,12 @@ export default {
       isEditMedicationOpen: false,
       isAddMedicationOpen: false,
       isDeleteMedicationOpen: false,
-      showSuccessMessage: false,
-      showErrorMessage: false,
-      showMessage: false
+      message: ''
     };
   },
 
   mounted() {
-    if (this.$page.props.status === 'success') {
-      this.showMessage = true
-      this.showSuccessMessage = true;
-      setTimeout(() => {
-        this.showSuccessMessage = false;
-        this.showMessage = false;
-        window.location.href = '/medications';
-      }, 2000);
-    }
 
-    if (this.$page.props.status === 'error') {
-      this.showMessage = true
-      this.showErrorMessage = true;
-      setTimeout(() => {
-        this.showErrorMessage = false;
-        this.showMessage = false;
-        window.location.href = '/medications';
-      }, 2000);
-    }
   },
 
   methods: {
@@ -86,6 +66,28 @@ export default {
       this.selectedMedication = medication;
       this.isDeleteMedicationOpen = true;
     },
+
+    updatedMedication(){
+      this.message = 'Medication updated successfully';
+      setTimeout(() => {
+        this.message = '';
+      }, 3000);
+    },
+
+    createdMedication(){
+      this.message = 'Medication updated successfully';
+      setTimeout(() => {
+        this.message = '';
+      }, 3000);
+    },
+
+    deletedMedication(){
+      this.message = 'Medication updated successfully';
+      setTimeout(() => {
+        this.message = '';
+      }, 3000);
+    },
+
   },
 };
 </script>
@@ -100,15 +102,8 @@ export default {
       </h2>
     </template>
 
-    <div
-        v-if="showMessage"
-        :class="{
-          'alert': true,
-          'alert-success': showSuccessMessage,
-          'alert-danger': showErrorMessage
-        }"
-    >
-      {{ $page.props.message }}
+    <div v-if="message" class="alert alert-success">
+      {{ message }}
     </div>
 
     <div class="py-12">
@@ -191,24 +186,21 @@ export default {
 
   <EditMedicationModal
       v-if="isEditMedicationOpen"
-      :editMode="true"
       :medication="selectedMedication"
+      @updated="updatedMedication"
       @close="closeModal"
-      @afterAction="getMedications"
   />
 
   <AddMedicationModal
       v-if="isAddMedicationOpen"
       :medication="selectedMedication"
       @close="closeModal"
-      @afterAction="getMedications"
   />
 
   <DeleteMedicationModal
       v-if="isDeleteMedicationOpen"
       :medication="selectedMedication"
       @close="closeModal"
-      @afterAction="getMedications"
   />
 </template>
 

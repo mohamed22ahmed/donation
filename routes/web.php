@@ -30,9 +30,9 @@ Route::middleware(['auth', 'verified'])
             ->prefix('medications')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
-                Route::get('/store', 'store')->name('store');
-                Route::get('/update', 'update')->name('update');
-                Route::get('/delete/{id}', 'delete')->name('delete');
+                Route::post('/store', 'store')->name('store');
+                Route::post('/update', 'update')->name('update');
+                Route::post('/delete/{id}', 'delete')->name('delete');
             });
     });
 

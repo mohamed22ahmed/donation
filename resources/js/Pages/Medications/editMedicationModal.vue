@@ -29,17 +29,25 @@ export default {
   },
 
   methods: {
-    updateMedication() {
-      this.$inertia.get(route('medications.update', this.form))
-          .then(() => {
-            this.$emit('close');
-            this.showSuccessMessage('Medication updated successfully!');
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            this.showErrorMessage('Failed to updated medication.');
-          });
+    handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.form.image = file;
+      }
+    },
 
+    updateMedication() {
+      const formData = new FormData();
+      for (const key in this.form) {
+        formData.append(key, this.form[key]);
+      }
+
+      this.$inertia.post(route('medications.update'), formData, {
+        preserveState: true,
+      });
+
+      this.$emit('updated')
+      this.$emit('close');
     }
   }
 };
@@ -121,7 +129,18 @@ export default {
                 </select>
               </div>
             </div>
-
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <label for="image" class="form-label">Upload Image</label>
+                <input
+                    type="file"
+                    name="image"
+                    id="image"
+                    class="form-control"
+                    @change="handleFileUpload"
+                />
+              </div>
+            </div>
             <!-- Modal Footer -->
             <div class="modal-footer border-top-0">
               <button type="button" class="btn btn-danger" @click="$emit('close')">Close</button>
