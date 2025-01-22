@@ -26,7 +26,6 @@ const submit = () => {
 
 const { url } = usePage();
 
-// Normalize URLs to match paths for comparison
 const normalizeUrl = (fullUrl) => {
   const parser = new URL(fullUrl, window.location.origin);
   return parser.pathname;
@@ -115,9 +114,9 @@ const getActiveClass = (routeUrl) => {
 
       <div class="col-md-6" style="width: 600px; margin: 10px; text-align: center; line-height: 75px; font-size: 30px">
         <div class="col-md-6 w-full max-w-md bg-white shadow-lg p-8 rounded-md">
-          <h1 class="text-2xl font-bold mb-4 text-center">Contact Us</h1>
+          <h1 class="text-2xl font-bold mb-3 text-center">Contact Us</h1>
           <div class="row">
-            <span class="inline-flex rounded-md">
+            <span class="inline-flex rounded-md justify-content-center">
               <a href="https://www.facebook.com/shahd.alaa.58555941?rdid=OMQtY0Et5BCCWQIs" target="_blank" style="margin-left:10px;color: #2563eb">
                 <i class="fab fa-facebook"></i>
               </a>
