@@ -31,8 +31,8 @@ export default {
     };
   },
 
-  mounted() {
-
+  beforeUnmount() {
+    this.closeModal()
   },
 
   methods: {
@@ -47,6 +47,7 @@ export default {
       this.isAddMedicationOpen = false;
       this.isDeleteMedicationOpen = false;
       this.selectedMedication = {};
+      this.message = '';
     },
 
     editMedicationModal(medication) {
@@ -75,14 +76,14 @@ export default {
     },
 
     createdMedication(){
-      this.message = 'Medication updated successfully';
+      this.message = 'Medication created successfully';
       setTimeout(() => {
         this.message = '';
       }, 3000);
     },
 
     deletedMedication(){
-      this.message = 'Medication updated successfully';
+      this.message = 'Medication deleted successfully';
       setTimeout(() => {
         this.message = '';
       }, 3000);
@@ -194,6 +195,7 @@ export default {
   <AddMedicationModal
       v-if="isAddMedicationOpen"
       :medication="selectedMedication"
+      @created="createdMedication"
       @close="closeModal"
   />
 

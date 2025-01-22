@@ -11,10 +11,10 @@ export default {
         'injection'
       ],
       form: {
-        name: this.medication.name,
-        price: this.medication.price,
-        quantity: this.medication.quantity,
-        type: this.medication.type ?? 'tablet',
+        name: '',
+        price: '',
+        quantity: '',
+        type: 'tablet',
       }
     }
   },
@@ -28,16 +28,25 @@ export default {
   },
 
   methods: {
+    handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.form.image = file;
+      }
+    },
+
     createMedication() {
-      this.$inertia.get(route('medications.store', this.form))
-        .then(() => {
-          this.$emit('close');
-          this.showSuccessMessage('Medication created successfully!');
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          this.showErrorMessage('Failed to create medication.');
-        });
+      const formData = new FormData();
+      for (const key in this.form) {
+        formData.append(key, this.form[key]);
+      }
+
+      this.$inertia.post(route('medications.store'), formData, {
+        preserveState: true,
+      });
+
+      this.$emit('created')
+      this.$emit('close');
     }
   }
 };
@@ -119,11 +128,22 @@ export default {
                 </select>
               </div>
             </div>
-
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <label for="image" class="form-label">Upload Image</label>
+                <input
+                    type="file"
+                    name="image"
+                    id="image"
+                    class="form-control"
+                    @change="handleFileUpload"
+                />
+              </div>
+            </div>
             <!-- Modal Footer -->
             <div class="modal-footer border-top-0">
               <button type="button" class="btn btn-danger" @click="$emit('close')">Close</button>
-              <button type="submit" class="btn btn-primary">Add</button>
+              <button type="submit" class="btn btn-primary">Create</button>
             </div>
           </form>
         </div>

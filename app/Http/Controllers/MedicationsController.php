@@ -26,7 +26,7 @@ class MedicationsController extends Controller
             $imagePath = $request->file('image')->store('medications', 'public');
         }
 
-         $medication = Medication::create([
+         Medication::create([
             'name' => $request->name,
             'quantity' => $request->quantity,
             'price' => $request->price,
