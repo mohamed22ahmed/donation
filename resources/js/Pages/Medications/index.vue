@@ -31,10 +31,6 @@ export default {
     };
   },
 
-  beforeUnmount() {
-    this.closeModal()
-  },
-
   methods: {
     showMedicationModal(medication) {
       this.selectedMedication = medication;
@@ -202,6 +198,7 @@ export default {
   <DeleteMedicationModal
       v-if="isDeleteMedicationOpen"
       :medication="selectedMedication"
+      @deleted="deletedMedication"
       @close="closeModal"
   />
 </template>

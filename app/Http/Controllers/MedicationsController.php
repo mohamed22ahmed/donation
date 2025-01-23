@@ -44,8 +44,8 @@ class MedicationsController extends Controller
         $medication = Medication::find($request->id);
         $imagePath = 'medications/default.png';
         if ($request->hasFile('image')) {
-            if (Storage::exists($medication->medication_img)) {
-                Storage::delete($medication->medication_img);
+            if (!str_contains($medication->medication_img, 'default.png') && Storage::disk('public')->exists($medication->medication_img)) {
+                Storage::disk('public')->delete($medication->medication_img);
             }
 
             $imagePath = $request->file('image')->store('medications', 'public');
@@ -64,31 +64,15 @@ class MedicationsController extends Controller
         return redirect()->back();
     }
 
-    public function delete($id)
+    public function delete(Request $request)
     {
-        $deleted = true;
-//        $deleted = Medication::where('id', $id)->delete();
-        if ($deleted) {
-            $medications = Medication::where('user_id', auth()->user()->id)->get()->map(function ($medication) {
-                return [
-                    'id' => $medication['id'],
-                    'name' => $medication['name'],
-                    'quantity' => $medication['quantity'],
-                    'price' => $medication['price'],
-                    'total' => $medication['total'],
-                    'type' => $medication['type'],
-                    'image' => asset('images/1.jpg'),
-//                'image' => asset('storage/' . $medication['medication_img']),
-                ];
-            });
-
-            return inertia()->render('Medications/index', [
-                'medications' => $medications
-            ])->with([
-                'status' => 'success',
-                'message' => 'Medication deleted successfully'
-            ]);
+        $medication = Medication::find($request->id);
+        if (!str_contains($medication->medication_img, 'default.png') && Storage::disk('public')->exists($medication->medication_img)) {
+            Storage::disk('public')->delete($medication->medication_img);
         }
+
+        $medication->delete();
+        return redirect()->back();
     }
 
     private function mapMedication($medication): array

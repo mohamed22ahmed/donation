@@ -6,7 +6,7 @@ export default {
   data() {
     return {
       form: {
-        id: this.medication.id
+        id: this.medication.id,
       }
     }
   },
@@ -21,17 +21,14 @@ export default {
 
   methods: {
     deleteMedication() {
-      this.$inertia.get(route('medications.delete', this.form.id))
-        .then(() => {
-          this.$emit('close');
-          this.showSuccessMessage('Medication deleted successfully!');
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          this.showErrorMessage('Failed to delete medication.');
-        });
+      this.$inertia.post(route('medications.delete'), this.form, {
+        preserveState: true,
+      });
+
+      this.$emit('deleted')
+      this.$emit('close');
     }
-  },
+  }
 };
 </script>
 
@@ -85,22 +82,6 @@ export default {
 
 .modal-footer {
   border-top: 1px solid #e9ecef;
-}
-
-.form-label {
-  font-weight: 500;
-  color: #495057;
-}
-
-.form-control, .form-select {
-  border-radius: 5px;
-  border: 1px solid #ced4da;
-  transition: border-color 0.3s ease;
-}
-
-.form-control:focus, .form-select:focus {
-  border-color: #80bdff;
-  box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
 }
 
 .btn-close {
