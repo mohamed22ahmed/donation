@@ -1,6 +1,5 @@
 <script setup>
 import {Head, Link, useForm, usePage} from '@inertiajs/vue3';
-import GuestLayout from "@/Layouts/GuestLayout.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -13,14 +12,21 @@ defineProps({
   canRegister: Boolean,
   background: String,
 });
+
 const form = useForm({
   message: '',
   email: '',
   name: '',
 });
+
 const submit = () => {
   form.post(route('contact-us'), {
-    onFinish: () => form.reset(),
+    onFinish: () => {
+      form.name = '';
+      form.email = '';
+      form.message = '';
+      this.showmessage = 'message sent successfully';
+    },
   });
 };
 
@@ -98,7 +104,6 @@ const getActiveClass = (routeUrl) => {
       </div>
     </nav>
 
-    <!-- Main Content -->
     <div class="justify-end  h-screen items-center" style="display: flex; flex-direction: row; justify-content: space-around;">
       <div class="col-md-6" style="width: 600px; margin: 10px; text-align: center;">
         <h1 style="font-size: 40px">keep in Touch</h1>
@@ -128,6 +133,7 @@ const getActiveClass = (routeUrl) => {
               </a>
             </span>
           </div>
+
           <form @submit.prevent="submit">
             <div class="mt-4">
               <InputLabel for="name" value="Name" class="text-left" />

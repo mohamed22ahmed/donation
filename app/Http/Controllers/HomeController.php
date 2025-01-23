@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendContactUsMessage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -26,7 +28,9 @@ class HomeController extends Controller
 
     public function contactUsSubmit(Request $request): Response
     {
-        dd($request->all());
+        Mail::to('gail@example.com')->send(new SendContactUsMessage($request));
+
+        return Inertia::render('Home/contact-us', $this->returnedResponse('1.jpg'));
     }
 
     public function dashboard(): Response
