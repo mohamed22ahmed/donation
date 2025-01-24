@@ -126,7 +126,7 @@ const getActiveClass = (routeUrl) => {
                 <i class="fab fa-facebook"></i>
               </a>
               <a href="https://www.linkedin.com/in/mohamed-hammam-1225ab17a/" target="_blank" style="margin-left:10px;color: #2563eb">
-                <i class="fab fa-linkedin"></i>
+                <i class="fa-solid fa-envelope"></i>
               </a>
               <a href="https://web.whatsapp.com/" target="_blank" style="margin-left:10px;color: springgreen">
                 <i class="fab fa-whatsapp"></i>

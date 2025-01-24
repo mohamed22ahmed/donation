@@ -28,7 +28,7 @@ class HomeController extends Controller
 
     public function contactUsSubmit(Request $request): Response
     {
-        Mail::to('gail@example.com')->send(new SendContactUsMessage($request));
+        Mail::to('mohamedahmed01119828317@gmail.com')->send(new SendContactUsMessage($request));
 
         return Inertia::render('Home/contact-us', $this->returnedResponse('1.jpg'));
     }
