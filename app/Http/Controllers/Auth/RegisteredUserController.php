@@ -36,7 +36,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): Response
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -59,6 +59,6 @@ class RegisteredUserController extends Controller
 
         Mail::to($user->email)->send(new SendVerificationMessage($user));
 
-        return Inertia::render('Verification/index', HomeController::returnedResponse('1.jpg'));
+        return redirect(route('verification.index'));
     }
 }
