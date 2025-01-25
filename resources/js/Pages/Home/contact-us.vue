@@ -125,7 +125,7 @@ const getActiveClass = (routeUrl) => {
               <a href="https://www.facebook.com/shahd.alaa.58555941?rdid=OMQtY0Et5BCCWQIs" target="_blank" style="margin-left:10px;color: #2563eb">
                 <i class="fab fa-facebook"></i>
               </a>
-              <a href="https://www.linkedin.com/in/mohamed-hammam-1225ab17a/" target="_blank" style="margin-left:10px;color: #2563eb">
+              <a href="mailto:shahdalaa878@gmail.com" target="_blank" style="margin-left:10px;color: #2563eb">
                 <i class="fa-solid fa-envelope"></i>
               </a>
               <a href="https://web.whatsapp.com/" target="_blank" style="margin-left:10px;color: springgreen">
