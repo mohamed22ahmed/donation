@@ -125,6 +125,8 @@ export default {
             <th>Price</th>
             <th>Total</th>
             <th>Type</th>
+            <th>Status</th>
+            <th>Expiry Date</th>
             <th>Image</th>
             <th>Actions</th>
           </tr>
@@ -137,6 +139,8 @@ export default {
             <td>{{ medication.price }}</td>
             <td>{{ medication.total }}</td>
             <td>{{ medication.type }}</td>
+            <td>{{ medication.status }}</td>
+            <td>{{ medication.expiry_date }}</td>
             <td style="justify-items: center;">
               <img
                 :src="medication.image"
