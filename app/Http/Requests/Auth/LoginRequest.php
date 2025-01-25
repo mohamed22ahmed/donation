@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +40,13 @@ class LoginRequest extends FormRequest
      */
     public function authenticate(): void
     {
+        $user = User::where('email', $this->email)->first();
+        if(is_null($user->email_verified_at)) {
+            throw ValidationException::withMessages([
+                'verification' => trans('please verify your account first'),
+            ]);
+        }
+
         $this->ensureIsNotRateLimited();
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {

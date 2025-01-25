@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MedicationsController;
+use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(HomeController::class)
@@ -12,6 +13,18 @@ Route::controller(HomeController::class)
         Route::get('/contact-us', 'contactUs')->name('contact');
         Route::post('/contact-us', 'contactUsSubmit')->name('contact-us');
     });
+
+Route::controller(VerificationController::class)
+    ->prefix('verification')
+    ->name('verification.')
+    ->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/store', 'store')->name('store');
+
+        Route::get('/resend', 'resend')->name('resend');
+        Route::post('/resend', 'resendPost')->name('resendPost');
+
+});
 
 
 Route::middleware(['auth', 'verified'])

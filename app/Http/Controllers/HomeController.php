@@ -38,7 +38,7 @@ class HomeController extends Controller
         return Inertia::render('Dashboard');
     }
 
-    private function returnedResponse($image): array
+    public static function returnedResponse($image): array
     {
         return [
             'canLogin' => Route::has('login'),

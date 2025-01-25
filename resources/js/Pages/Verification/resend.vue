@@ -1,7 +1,4 @@
 <script setup>
-import Checkbox from '@/Components/Checkbox.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
@@ -17,14 +14,11 @@ defineProps({
 
 const form = useForm({
     email: '',
-    password: '',
-    verification:'',
-    remember: false,
 });
 
 const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => form.reset('password'),
+    form.post(route('verification.resendPost'), {
+        onFinish: () => form.reset(),
     });
 };
 
@@ -44,7 +38,7 @@ const getActiveClass = (routeUrl) => {
 </script>
 
 <template>
-  <Head title="Login"/>
+  <Head title="Resend verification"/>
   <div class="relative min-h-screen" :style="`background-image: url('${background}'); background-size: cover; background-position: center;`">
     <nav class="absolute top-0 left-0 w-full bg-gray-100 shadow-md z-10">
       <div class="max-w-7xl mx-auto flex items-center h-16">
@@ -106,22 +100,14 @@ const getActiveClass = (routeUrl) => {
     <!-- Main Content -->
     <div class="justify-end  h-screen items-center" style="display: flex; flex-direction: row; justify-content: space-around;">
       <div class="col-md-6" style="width: 600px; margin: 10px; text-align: center;">
-        <h1 style="font-size: 40px">Welcome back! </h1>
+        <h1 style="font-size: 40px">Resend verification code! </h1>
         <p style="font-size: 22px">
-          To stay in touch with us, please log in to access your account.
-          Enter your personal information to get started.
-          We are happy to have you back!
-
-        </p>
-        <p class="mt-5" style="font-size: 22px">
-          If you don't have an account yet, feel free to sign up and join our community.
+          Don't worry if you missed up the verification message to your email. We can ask to send you another one.
         </p>
       </div>
       <div class="col-md-6" style="width: 600px; margin: 10px; text-align: center; line-height: 75px; font-size: 30px">
         <div class="col-md-6 w-full max-w-md bg-white shadow-lg p-8 rounded-md">
-          <h1 class="text-2xl font-bold mb-4 text-center">Login</h1>
-
-          <InputError class="mt-2" :message="form.errors.verification" />
+          <h1 class="text-2xl font-bold mb-4 text-center">Resend verification</h1>
           <form @submit.prevent="submit">
             <div>
               <InputLabel for="email" value="Email" class="text-left" />
@@ -133,34 +119,7 @@ const getActiveClass = (routeUrl) => {
                   v-model="form.email"
                   required
                   autofocus
-                  autocomplete="username"
               />
-
-              <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-              <InputLabel for="password" value="Password" class="text-left" />
-
-              <TextInput
-                  id="password"
-                  type="password"
-                  class="mt-1 block w-full"
-                  v-model="form.password"
-                  required
-                  autocomplete="current-password"
-              />
-
-              <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4 block">
-              <label class="flex items-center">
-                <Checkbox name="remember" v-model:checked="form.remember" />
-                <span class="ms-2 text-sm text-gray-600"
-                >Remember me</span
-                >
-              </label>
             </div>
 
             <div class="mt-4 flex items-center justify-end">
@@ -169,25 +128,8 @@ const getActiveClass = (routeUrl) => {
                   :class="{ 'opacity-25': form.processing }"
                   :disabled="form.processing"
               >
-                Log in
+                Resend code
               </PrimaryButton>
-            </div>
-
-            <div class="mt-4 flex items-center justify-start">
-              <Link
-                  v-if="canResetPassword"
-                  :href="route('password.request')"
-                  class="mr-12 rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                Forgot your password?
-              </Link>
-
-              <Link
-                  :href="route('verification.resend')"
-                  class=" ml-12 rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                verify your account
-              </Link>
             </div>
           </form>
         </div>
