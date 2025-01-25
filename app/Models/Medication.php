@@ -12,7 +12,9 @@ class Medication extends Model
         'price',
         'total',
         'type',
+        'status',
         'medication_img',
         'user_id',
+        'expiry_date'
     ];
 }

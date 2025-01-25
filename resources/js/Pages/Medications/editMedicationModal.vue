@@ -5,17 +5,16 @@ export default {
 
   data() {
     return {
-      types: [
-        'tablet',
-        'drug',
-        'injection'
-      ],
+      types: ['tablet', 'injection', 'Syrup'],
+      statuses: ['new', 'used'],
       form: {
         id: this.medication.id,
         name: this.medication.name,
         price: this.medication.price,
         quantity: this.medication.quantity,
         type: this.medication.type ?? 'tablet',
+        status: this.medication.status ?? 'new',
+        expiry_date: this.medication.expiry_date
       }
     }
   },
@@ -117,6 +116,21 @@ export default {
                 />
               </div>
               <div class="col-md-6">
+                <label for="expiry_date" class="form-label">Expiry Date</label>
+                <input
+                    v-model="form.expiry_date"
+                    type="date"
+                    name="expiry_date"
+                    id="expiry_date"
+                    placeholder="Expiry Date"
+                    class="form-control"
+                    required
+                />
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
                 <label for="type" class="form-label">Type</label>
                 <select
                     v-model="form.type"
@@ -128,7 +142,20 @@ export default {
                   <option v-for="type in types" :value="type" :key="type">{{ type }}</option>
                 </select>
               </div>
+              <div class="col-md-6">
+                <label for="status" class="form-label">Status</label>
+                <select
+                    v-model="form.status"
+                    name="status"
+                    id="status"
+                    class="form-select"
+                    required
+                >
+                  <option v-for="stat in statuses" :value="stat" :key="stat">{{ stat }}</option>
+                </select>
+              </div>
             </div>
+
             <div class="row mb-3">
               <div class="col-md-12">
                 <label for="image" class="form-label">Upload Image</label>

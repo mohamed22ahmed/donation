@@ -39,9 +39,11 @@ export default {
             <div class="col-md-6">
               <div class="mb-3">Name: {{ medication.name }}</div>
               <div class="mb-3">Type: {{ medication.type }}</div>
+              <div class="mb-3">Status: {{ medication.status }}</div>
               <div class="mb-3">Quantity: {{ medication.quantity }}</div>
               <div class="mb-3">Price: {{ medication.price }}</div>
               <div class="mb-3">Total: {{ medication.total }}</div>
+              <div class="mb-3">Expiry Date: {{ medication.expiry_date }}</div>
             </div>
 
             <div class="col-md-6 d-flex">

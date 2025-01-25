@@ -17,9 +17,11 @@ return new class extends Migration
             $table->integer('quantity');
             $table->integer('price');
             $table->integer('total');
-            $table->enum('type', ['tablet', 'drug', 'injection']);
+            $table->enum('type', ['tablet', 'injection', 'Syrup']); // update code with that
+            $table->enum('status', ['used', 'new']); // update code with that
             $table->string('medication_img')->nullable();
             $table->unsignedBigInteger('user_id');
+            $table->date('expiry_date')->nullable(); // update code with that
             $table->timestamps();
         });
     }

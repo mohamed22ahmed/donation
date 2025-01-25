@@ -31,9 +31,11 @@ class MedicationsController extends Controller
             'quantity' => $request->quantity,
             'price' => $request->price,
             'type' => $request->type,
+            'status' => $request->status,
             'total' => $request->quantity * $request->price,
             'medication_img' => $imagePath,
-            'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id,
+             'expiry_date' => $request->expiry_date
          ]);
 
         return redirect()->back();
@@ -56,9 +58,11 @@ class MedicationsController extends Controller
             'quantity' => $request->quantity,
             'price' => $request->price,
             'type' => $request->type,
+            'status' => $request->status,
             'total' => $request->quantity * $request->price,
             'medication_img' => $imagePath,
-            'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id,
+             'expiry_date' => $request->expiry_date
         ]);
 
         return redirect()->back();
@@ -84,6 +88,8 @@ class MedicationsController extends Controller
             'price' => $medication['price'],
             'total' => $medication['total'],
             'type' => $medication['type'],
+            'status' => $medication['status'],
+            'expiry_date' => $medication['expiry_date'],
             'image' => asset('storage/' . $medication['medication_img']) ?? asset('images/background.jpg'),
         ];
     }
