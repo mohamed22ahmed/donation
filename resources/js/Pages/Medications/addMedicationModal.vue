@@ -7,6 +7,8 @@ export default {
     return {
       types: ['tablet', 'injection', 'Syrup'],
       statuses: ['new', 'used'],
+      minDate: this.getTodayDate(),
+      errorMessage: '',
       form: {
         name: '',
         price: '',
@@ -46,6 +48,25 @@ export default {
 
       this.$emit('created')
       this.$emit('close');
+    },
+
+    getTodayDate() {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    },
+    validateDate() {
+      const selectedDate = new Date(this.form.expiry_date);
+      const today = new Date(this.minDate);
+
+      if (selectedDate < today) {
+        this.errorMessage = 'You cannot select a date before today.';
+        this.form.expiry_date = ''; // Clear the selected date
+      } else {
+        this.errorMessage = '';
+      }
     }
   }
 };
@@ -124,7 +145,10 @@ export default {
                     placeholder="Expiry Date"
                     class="form-control"
                     required
+                    :min="minDate"
+                    @input="validateDate"
                 />
+                <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
               </div>
             </div>
             <div class="row mb-3">
