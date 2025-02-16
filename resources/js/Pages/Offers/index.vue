@@ -2,9 +2,11 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import "@fortawesome/fontawesome-free/css/all.css";
+import showOfferModal from "@/Pages/Offers/showOfferModal.vue";
 
 export default {
   components: {
+    showOfferModal,
     AuthenticatedLayout,
     Head,
   },
@@ -12,6 +14,34 @@ export default {
   props: {
     offers: Array
   },
+
+  data() {
+    return {
+      isModalOpen: false,
+      medications: [],
+      price: 0,
+    };
+  },
+
+  methods: {
+    showMedications(medications) {
+      this.medications = medications;
+      this.price = '';
+      this.isModalOpen = true;
+    },
+
+    showOffer(offer) {
+      this.medications = offer.medications;
+      this.price = offer.price;
+      this.isModalOpen = true;
+    },
+
+    closeModal() {
+      this.isModalOpen = false;
+      this.medications = [];
+      this.price = 0;
+    },
+  }
 };
 </script>
 
@@ -53,6 +83,7 @@ export default {
               <button
                   type="button"
                   class="pl-3 text-green-500 text-lg hover:text-gray-500"
+                  @click="showMedications(offer.medications)"
               >
                 <i class="fa-solid fa-eye"></i>
               </button>
@@ -63,6 +94,7 @@ export default {
               <button
                   type="button"
                   class="pl-3 text-green-500 text-lg hover:text-gray-500"
+                  @click="showOffer(offer)"
               >
                 <i class="fa-solid fa-eye"></i>
               </button>
@@ -85,6 +117,13 @@ export default {
       </div>
     </div>
   </AuthenticatedLayout>
+
+  <showOfferModal
+      v-if="isModalOpen"
+      :medications="medications"
+      :price="price"
+      @close="closeModal"
+  />
 </template>
 
 <style scoped>
