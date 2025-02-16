@@ -37,12 +37,12 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('medications.index')" :active="route().current('medications.index')">
                                   Medications
                                 </NavLink>
-<!--                              <NavLink :href="route('medications.index')" :active="route().current('medications.index')">-->
-<!--                                Offers-->
-<!--                              </NavLink>-->
-<!--                              <NavLink :href="route('medications.index')" :active="route().current('medications.index')">-->
-<!--                                Orders-->
-<!--                              </NavLink>-->
+                                <NavLink :href="route('offers.index')" :active="route().current('offers.index')">
+                                  Offers
+                                </NavLink>
+                                <NavLink :href="route('orders.index')" :active="route().current('orders.index')">
+                                  Orders
+                                </NavLink>
 <!--                              <NavLink :href="route('medications.index')" :active="route().current('medications.index')">-->
 <!--                                Ratings-->
 <!--                              </NavLink>-->

@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MedicationsController;
+use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\OffersController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,10 +49,29 @@ Route::middleware(['auth', 'verified'])
                 Route::post('/update', 'update')->name('update');
                 Route::post('/delete', 'delete')->name('delete');
             });
+
+        Route::controller(OffersController::class)
+            ->name('offers.')
+            ->prefix('offers')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::post('/store', 'store')->name('store');
+                Route::post('/update', 'update')->name('update');
+                Route::post('/delete', 'delete')->name('delete');
+            });
+
+        Route::controller(OrdersController::class)
+            ->name('orders.')
+            ->prefix('orders')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::post('/store', 'store')->name('store');
+                Route::post('/update', 'update')->name('update');
+                Route::post('/delete', 'delete')->name('delete');
+            });
     });
 
 //Route::resource('offers', MedicationsController::class)->middleware(['auth', 'verified']);
-//Route::resource('orders', MedicationsController::class)->middleware(['auth', 'verified']);
 //Route::resource('ratings', MedicationsController::class)->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';
