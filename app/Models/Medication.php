@@ -17,4 +17,9 @@ class Medication extends Model
         'user_id',
         'expiry_date'
     ];
+
+    public function offerMedications()
+    {
+        return $this->hasMany(OfferMedication::class);
+    }
 }

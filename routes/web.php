@@ -58,6 +58,10 @@ Route::middleware(['auth', 'verified'])
                 Route::post('/store', 'store')->name('store');
                 Route::post('/update', 'update')->name('update');
                 Route::post('/delete', 'delete')->name('delete');
+                Route::get('/offer/newId', 'getNewId')->name('newId');
+                Route::get('/getOfferMedications/{id}', 'getOfferMedications')->name('getOfferMedications');
+                Route::get('/getMedications/{offerId}', 'getMedications')->name('getMedications');
+                Route::post('/offer/save_medications', 'saveMedications')->name('saveMedications');
             });
 
         Route::controller(OrdersController::class)
@@ -71,7 +75,6 @@ Route::middleware(['auth', 'verified'])
             });
     });
 
-//Route::resource('offers', MedicationsController::class)->middleware(['auth', 'verified']);
 //Route::resource('ratings', MedicationsController::class)->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';

@@ -1,0 +1,333 @@
+<script>
+export default {
+  name: "addOfferModal",
+
+  data() {
+    return {
+      isAddOfferModalVisible: true,
+      isAddMedicationModalVisible: false,
+
+      errorMessage: '',
+      medications: [],
+      editMode: false,
+      offerMedications: [],
+
+      form: {
+        offer_id: 0,
+        price: 0,
+      },
+      tempForm: {
+        id: -1,
+        name: '',
+        quantity: 0,
+        price: 0,
+      },
+    };
+  },
+
+  mounted() {
+    this.getNewOfferId();
+    $(this.$refs.addOfferModal).modal('show');
+  },
+
+  methods: {
+    getMedications(){
+      axios.get(route('offers.getMedications', this.form.offer_id))
+          .then((response) => {
+            this.medications = response.data
+          })
+    },
+
+    getNewOfferId() {
+      axios.get(route('offers.newId'))
+          .then((response) => {
+            this.form.offer_id = response.data;
+            this.loadOfferMedications();
+          })
+    },
+
+    addMedication(){
+      this.editMode = false;
+      this.resetTempForm();
+      this.getMedications();
+      $(this.$refs.addOfferModal).modal('hide');
+      $(this.$refs.addMedicationModal).modal('show');
+    },
+
+    closeMedication(){
+      this.editMode = false;
+      this.loadOfferMedications();
+      $(this.$refs.addMedicationModal).modal('hide');
+      $(this.$refs.addOfferModal).modal('show');
+      this.resetTempForm()
+      document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+    },
+
+    loadOfferMedications(){
+      axios.get(route('offers.getOfferMedications', this.form.offer_id))
+          .then((response) => {
+            this.offerMedications = response.data.data;
+          })
+    },
+
+    resetTempForm(){
+      this.tempForm.id = -1;
+      this.tempForm.name = '';
+      this.tempForm.quantity = 0;
+      this.tempForm.price = 0;
+    },
+
+    getMedicationPriceAndQuantity(id) {
+      for (let i = 0; i < this.medications.length; i++) {
+        if (this.medications[i].id === id) {
+          this.tempForm.id = this.medications[i].id;
+          this.tempForm.name = this.medications[i].name;
+          this.tempForm.quantity = this.medications[i].quantity;
+          this.tempForm.price = this.medications[i].price;
+        }
+      }
+    },
+
+    appendMedication() {
+      const formData = new FormData();
+      for (const key in this.tempForm) {
+        formData.append(key, this.tempForm[key]);
+      }
+      formData.append('offer_id', this.form.offer_id);
+
+      axios.post(route('offers.saveMedications'), formData)
+          .then((response) => {
+            this.offerMedications = response.data.data;
+          })
+
+      this.closeMedication()
+    },
+
+    editMedication(index, medication) {
+      this.editMode = true;
+      this.tempForm = medication;
+      this.deleteMedication(index)
+      $(this.$refs.addMedicationModal).modal('hide');
+      $(this.$refs.addOfferModal).modal('show');
+    },
+
+    updateMedication() {
+      this.appendMedication()
+      this.closeMedication();
+    },
+
+    deleteMedication(index) {
+      this.offerMedications.splice(index, 1);
+      localStorage.setItem('offerMedications', JSON.stringify(this.offerMedications));
+    },
+
+    closeModal() {
+      $(this.$refs.addOfferModal).modal('hide');
+      document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+      this.$emit('close');
+    },
+  },
+};
+</script>
+
+<template>
+  <div>
+    <div ref="addOfferModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-light">
+            <h5 class="modal-title" id="addNewLabel">Add Offer</h5>
+            <button type="button" class="btn-close" @click="closeModal" aria-label="Close">x</button>
+          </div>
+
+          <div class="modal-body">
+            <div class="float-right mb-2">
+              <button
+                  type="button"
+                  class="pl-3 text-blue-700 text-lg hover:text-gray-500"
+                  style="font-size: 22px"
+                  @click="addMedication"
+              >
+                Add New
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+            <br />
+
+            <div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="medication in offerMedications" :key="medication.id">
+                    <td>{{ medication.id }}</td>
+                    <td>{{ medication.name }}</td>
+                    <td>{{ medication.quantity }}</td>
+                    <td>{{ medication.price }}</td>
+                    <td>
+                      <button
+                          type="button"
+                          class="pl-3 text-green-500 text-lg hover:text-gray-500"
+                      >
+                        <i class="fa-solid fa-eye"></i>
+                      </button>
+                      <button
+                          type="button"
+                          class="pl-3 text-blue-500 text-lg hover:text-gray-500"
+                          @click="editMedication(medication.id, medication)"
+                      >
+                        <i class="fa-solid fa-pencil"></i>
+                      </button>
+                      <button
+                          type="button"
+                          class="pl-3 text-red-500 text-lg hover:text-gray-500"
+                          @click="deleteMedication(medication.id)"
+                      >
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="modal-footer border-top-0">
+            <button type="button" class="btn btn-danger" @click="closeModal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div ref="addMedicationModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-light">
+            <h5 class="modal-title" id="addNewLabel">Add Medication</h5>
+            <button
+                type="button"
+                class="btn-close"
+                @click="closeMedication"
+                aria-label="Close"
+            >x</button>
+          </div>
+
+          <div class="modal-body">
+            <form @submit.prevent="editMode ? updateMedication() : appendMedication()">
+              <div class="row mb-3">
+                <div class="col-md-12">
+                  <label for="medication_id" class="form-label">Medication</label>
+                  <select
+                      v-model="tempForm.id"
+                      name="medication_id"
+                      id="medication_id"
+                      class="form-select"
+                      @change="getMedicationPriceAndQuantity(tempForm.id)"
+                      required
+                  >
+                    <option value="-1" disabled :selected="tempForm.id == -1">Select Medication</option>
+                    <option v-for="med in medications" :value="med.id" :key="med.id">{{ med.name }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="quantity" class="form-label">Quantity</label>
+                  <input
+                      v-model="tempForm.quantity"
+                      type="number"
+                      name="quantity"
+                      id="quantity"
+                      class="form-control"
+                      required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="price" class="form-label">Price</label>
+                  <input
+                      v-model="tempForm.price"
+                      type="number"
+                      name="price"
+                      id="price"
+                      class="form-control"
+                      required
+                  />
+                </div>
+              </div>
+
+              <div class="modal-footer border-top-0">
+                <button type="button" class="btn btn-danger" @click="closeMedication">Close</button>
+                <button type="submit" class="btn btn-primary" v-if="tempForm.id != -1">Create</button>
+                <button type="submit" class="btn btn-secondary" disabled v-else>Create</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.modal-content {
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  border-bottom: 1px solid #e9ecef;
+}
+
+.modal-footer {
+  border-top: 1px solid #e9ecef;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #495057;
+}
+
+.form-control, .form-select {
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #4a5568;
+  color: white;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+}
+
+.btn-close:hover {
+  opacity: 0.8;
+}
+</style>

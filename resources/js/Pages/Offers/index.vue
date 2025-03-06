@@ -1,46 +1,59 @@
 <script>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
+import axios from 'axios';
 import "@fortawesome/fontawesome-free/css/all.css";
 import showOfferModal from "@/Pages/Offers/showOfferModal.vue";
+import addOfferModal from "@/Pages/Offers/addOfferModal.vue";
 
 export default {
   components: {
     showOfferModal,
+    addOfferModal,
     AuthenticatedLayout,
     Head,
   },
 
   props: {
-    offers: Array
+    offers: Array,
+    medications: Array
   },
 
   data() {
     return {
       isModalOpen: false,
-      medications: [],
+      isCreateModalOpen: false,
+      selectedMedication: [],
       price: 0,
     };
   },
 
   methods: {
-    showMedications(medications) {
-      this.medications = medications;
+    showMedications(medication) {
+      this.selectedMedication = medication;
       this.price = '';
       this.isModalOpen = true;
     },
 
     showOffer(offer) {
-      this.medications = offer.medications;
+      this.selectedMedication = offer.medications;
       this.price = offer.price;
       this.isModalOpen = true;
     },
 
     closeModal() {
       this.isModalOpen = false;
-      this.medications = [];
+      this.isCreateModalOpen = false;
+      this.selectedMedication = [];
       this.price = 0;
     },
+
+    addOfferModal() {
+      this.isModalOpen = false;
+      this.selectedMedication = [];
+      this.price = 0;
+      this.isCreateModalOpen = true;
+    }
   }
 };
 </script>
@@ -60,6 +73,7 @@ export default {
         <div class="float-right mb-2">
           <button
               type="button"
+              @click="addOfferModal()"
               class="pl-3 text-blue-700 text-lg hover:text-gray-500"
               style="font-size: 22px"
           >
@@ -120,8 +134,13 @@ export default {
 
   <showOfferModal
       v-if="isModalOpen"
-      :medications="medications"
+      :medication="selectedMedication"
       :price="price"
+      @close="closeModal"
+  />
+
+  <addOfferModal
+      v-if="isCreateModalOpen"
       @close="closeModal"
   />
 </template>

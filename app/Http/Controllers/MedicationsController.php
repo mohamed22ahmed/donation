@@ -79,7 +79,7 @@ class MedicationsController extends Controller
         return redirect()->back();
     }
 
-    private function mapMedication($medication): array
+    public static function mapMedication($medication): array
     {
         return [
             'id' => $medication['id'],
