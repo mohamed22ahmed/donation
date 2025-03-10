@@ -9,6 +9,7 @@ export default {
 
       errorMessage: '',
       medications: [],
+      selectedMedication: {},
       editMode: false,
       offerMedications: [],
 
@@ -103,22 +104,46 @@ export default {
       this.closeMedication()
     },
 
-    editMedication(index, medication) {
+    editMedication(medication) {
+      this.selectedMedication = medication;
       this.editMode = true;
-      this.tempForm = medication;
-      this.deleteMedication(index)
-      $(this.$refs.addMedicationModal).modal('hide');
-      $(this.$refs.addOfferModal).modal('show');
+      this.getMedicationsWhenUpdate(medication.medication_id);
+      this.fillTempFormWithMedication(medication);
+      $(this.$refs.addMedicationModal).modal('show');
+      $(this.$refs.addOfferModal).modal('hide');
+    },
+
+    fillTempFormWithMedication(medication){
+      this.tempForm.id = medication.medication_id;
+      this.tempForm.name = medication.name;
+      this.tempForm.quantity = medication.quantity;
+      this.tempForm.price = medication.price;
+    },
+
+    getMedicationsWhenUpdate(index) {
+      axios.get(route('offers.getMedicationsForUpdate', [this.form.offer_id, index]))
+          .then((response) => {
+            this.medications = response.data
+          })
     },
 
     updateMedication() {
-      this.appendMedication()
+      const formData = new FormData();
+      for (const key in this.tempForm) {
+        formData.append(key, this.tempForm[key]);
+      }
+      formData.append('offer_id', this.form.offer_id);
+      formData.append('offer_medication_id', this.selectedMedication.id);
+
+      axios.post(route('offers.updateMedications'), formData)
+          .then((response) => {
+            this.offerMedications = response.data.data;
+          })
       this.closeMedication();
     },
 
     deleteMedication(index) {
-      this.offerMedications.splice(index, 1);
-      localStorage.setItem('offerMedications', JSON.stringify(this.offerMedications));
+      alert('sdfgsdfg')
     },
 
     closeModal() {
@@ -181,7 +206,7 @@ export default {
                       <button
                           type="button"
                           class="pl-3 text-blue-500 text-lg hover:text-gray-500"
-                          @click="editMedication(medication.id, medication)"
+                          @click="editMedication(medication)"
                       >
                         <i class="fa-solid fa-pencil"></i>
                       </button>
