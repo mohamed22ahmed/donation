@@ -155,6 +155,20 @@ export default {
       document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
       this.$emit('close');
     },
+
+    showMedication(medication){
+      $(this.$refs.showMedicationModal).modal('show');
+      $(this.$refs.addMedicationModal).modal('hide');
+      $(this.$refs.addOfferModal).modal('hide');
+      this.fillTempFormWithMedication(medication)
+    },
+
+    closeShowMedication() {
+      $(this.$refs.showMedicationModal).modal('hide');
+      $(this.$refs.addMedicationModal).modal('hide');
+      $(this.$refs.addOfferModal).modal('show');
+      document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+    },
   },
 };
 </script>
@@ -204,6 +218,7 @@ export default {
                       <button
                           type="button"
                           class="pl-3 text-green-500 text-lg hover:text-gray-500"
+                          @click="showMedication(medication)"
                       >
                         <i class="fa-solid fa-eye"></i>
                       </button>
@@ -301,6 +316,29 @@ export default {
         </div>
       </div>
     </div>
+
+    <div ref="showMedicationModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addNewLabel">Show Medication</h5>
+            <button type="button" class="btn-close" @click="closeShowMedication" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="mb-3">ID: {{ tempForm.id }}</div>
+              <div class="mb-3">Name: {{ tempForm.name }}</div>
+              <div class="mb-3">Quantity: {{ tempForm.quantity }}</div>
+              <div class="mb-3">Price: {{ tempForm.price }}</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" @click="closeShowMedication">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
