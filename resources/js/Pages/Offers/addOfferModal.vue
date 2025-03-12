@@ -143,7 +143,11 @@ export default {
     },
 
     deleteMedication(index) {
-      alert('sdfgsdfg')
+      axios.post(route('offers.deleteOfferMedication', [index, this.form.offer_id]))
+          .then((response) => {
+            this.offerMedications = response.data.data;
+          })
+      this.closeMedication();
     },
 
     closeModal() {

@@ -108,4 +108,9 @@ class OffersController extends Controller
         $offerMedications = OfferMedication::where('offer_id', $id)->with('medication')->get();
         return OfferMedicationResource::collection($offerMedications);
     }
+
+    public function deleteOfferMedication($id, $offerId){
+        OfferMedication::find($id)->delete();
+        return $this->getOfferMedications($offerId);
+    }
 }
