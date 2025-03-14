@@ -32,7 +32,31 @@ class OffersController extends Controller
             'price' => $request->price
         ]);
 
+        $this->subtractMedicationsQuantity($request->offer_id);
+    }
 
+    private function subtractMedicationsQuantity($offerId): void
+    {
+        $offerMedications = OfferMedication::where('offer_id', $offerId)->get();
+
+        foreach ($offerMedications as $offerMedication) {
+            $medication = Medication::find($offerMedication->medication_id);
+            $medication->quantity -= $offerMedication->quantity;
+            $medication->total = $medication->quantity * $medication->price;
+            $medication->save();
+        }
+    }
+
+    private function addMedicationsQuantity($offerId): void
+    {
+        $offerMedications = OfferMedication::where('offer_id', $offerId)->get();
+
+        foreach ($offerMedications as $offerMedication) {
+            $medication = Medication::find($offerMedication->medication_id);
+            $medication->quantity += $offerMedication->quantity;
+            $medication->total = $medication->quantity * $medication->price;
+            $medication->save();
+        }
     }
 
     public function getMedications($offerId)
@@ -48,6 +72,10 @@ class OffersController extends Controller
                         $selected = true;
                         break;
                     }
+                }
+
+                if($medication->quantity == 0){
+                    $selected = true;
                 }
 
                 if (!$selected) {
@@ -125,6 +153,7 @@ class OffersController extends Controller
     }
 
     public function delete($id){
+        $this->addMedicationsQuantity($id);
         OfferMedication::where('offer_id', $id)->delete();
         Offer::find($id)->delete();
     }
