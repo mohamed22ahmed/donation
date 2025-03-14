@@ -55,9 +55,10 @@ Route::middleware(['auth', 'verified'])
             ->prefix('offers')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
+                Route::get('/getOffers', 'getOffers')->name('getOffers');
                 Route::post('/store', 'store')->name('store');
                 Route::post('/update', 'update')->name('update');
-                Route::post('/delete', 'delete')->name('delete');
+                Route::get('/delete/{id}', 'delete')->name('delete');
                 Route::get('/offer/newId', 'getNewId')->name('newId');
                 Route::get('/getOfferMedications/{id}', 'getOfferMedications')->name('getOfferMedications');
                 Route::get('/getMedications/{offerId}', 'getMedications')->name('getMedications');

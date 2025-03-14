@@ -14,10 +14,25 @@ class OffersController extends Controller
 {
     public function index(): Response
     {
-        $offers = Offer::where('user_id', auth()->user()->id)->get();
+        $offers = $this->getOffers();
         return inertia()->render('Offers/index', [
             'offers' => $offers,
         ]);
+    }
+
+    public function getOffers()
+    {
+        return Offer::where('user_id', auth()->user()->id)->get();
+    }
+
+    public function store(Request $request) {
+        Offer::create([
+            'id' => $request->offer_id,
+            'user_id' => auth()->user()->id,
+            'price' => $request->price
+        ]);
+
+
     }
 
     public function getMedications($offerId)
@@ -87,20 +102,16 @@ class OffersController extends Controller
             'quantity' => $request->quantity,
             'price' => $request->price
         ]);
-        $offer = OfferMedication::where('offer_id', $request->offer_id)->latest()->first();
-        return $this->getOfferMedications($offer->offer_id);
     }
 
     public function updateMedications(Request $request)
     {
-        $offer = OfferMedication::find($request->offer_medication_id);
-        $offer->update([
-            'medication_id' => $request->id,
-            'quantity' => $request->quantity,
-            'price' => $request->price
-        ]);
-
-        return $this->getOfferMedications($offer->offer_id);
+        OfferMedication::find($request->offer_medication_id)
+            ->update([
+                'medication_id' => $request->id,
+                'quantity' => $request->quantity,
+                'price' => $request->price
+            ]);
     }
 
     public function getOfferMedications($id)
@@ -111,6 +122,10 @@ class OffersController extends Controller
 
     public function deleteOfferMedication($id, $offerId){
         OfferMedication::find($id)->delete();
-        return $this->getOfferMedications($offerId);
+    }
+
+    public function delete($id){
+        OfferMedication::where('offer_id', $id)->delete();
+        Offer::find($id)->delete();
     }
 }

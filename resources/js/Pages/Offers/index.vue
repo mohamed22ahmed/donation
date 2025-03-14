@@ -19,33 +19,46 @@ export default {
     medications: Array
   },
 
+  mounted() {
+    this.userOffers = this.offers;
+  },
+
   data() {
     return {
       isModalOpen: false,
       isCreateModalOpen: false,
-      selectedMedication: [],
+      offerId: 0,
       price: 0,
+      userOffers: [],
     };
   },
 
   methods: {
-    showMedications(medication) {
-      this.selectedMedication = medication;
+    showMedications(offer) {
+      this.offerId = offer.id;
       this.price = '';
       this.isModalOpen = true;
     },
 
     showOffer(offer) {
-      this.selectedMedication = offer.medications;
+      this.offerId = offer.id;
       this.price = offer.price;
       this.isModalOpen = true;
     },
 
     closeModal() {
+      this.getOffers();
       this.isModalOpen = false;
       this.isCreateModalOpen = false;
       this.selectedMedication = [];
       this.price = 0;
+    },
+
+    getOffers(){
+      axios.get(route('offers.getOffers'))
+          .then((response) => {
+            this.userOffers = response.data;
+          });
     },
 
     addOfferModal() {
@@ -53,6 +66,13 @@ export default {
       this.selectedMedication = [];
       this.price = 0;
       this.isCreateModalOpen = true;
+    },
+
+    deleteOffer(id) {
+      axios.get(route('offers.delete', id))
+          .then(() => {
+            this.getOffers();
+          });
     }
   }
 };
@@ -91,13 +111,13 @@ export default {
           </tr>
           </thead>
           <tbody>
-          <tr v-for="offer in offers" :key="offer.id">
+          <tr v-for="offer in userOffers" :key="offer.id">
             <td>{{ offer.id }}</td>
             <td>
               <button
                   type="button"
                   class="pl-3 text-green-500 text-lg hover:text-gray-500"
-                  @click="showMedications(offer.medications)"
+                  @click="showMedications(offer)"
               >
                 <i class="fa-solid fa-eye"></i>
               </button>
@@ -114,13 +134,8 @@ export default {
               </button>
               <button
                   type="button"
-                  class="pl-3 text-blue-500 text-lg hover:text-gray-500"
-              >
-                <i class="fa-solid fa-pencil"></i>
-              </button>
-              <button
-                  type="button"
                   class="pl-3 text-red-500 text-lg hover:text-gray-500"
+                  @click="deleteOffer(offer.id)"
               >
                 <i class="fa-solid fa-trash"></i>
               </button>
@@ -134,7 +149,7 @@ export default {
 
   <showOfferModal
       v-if="isModalOpen"
-      :medication="selectedMedication"
+      :offerId="offerId"
       :price="price"
       @close="closeModal"
   />

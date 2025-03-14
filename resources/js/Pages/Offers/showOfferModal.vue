@@ -1,15 +1,31 @@
 <script>
 export default {
   name: "showOfferModal",
-  props: ['medication', 'price'],
+  props: ['offerId', 'price'],
 
   mounted() {
+    this.getOfferMedications();
     $('#showOffer').modal('show');
+  },
+
+  data() {
+    return {
+      medications: [],
+    };
   },
 
   beforeUnmount() {
     $('#showOffer').modal('hide');
-  }
+  },
+
+  methods: {
+    getOfferMedications() {
+      axios.get(route('offers.getOfferMedications', this.offerId))
+          .then((response) => {
+            this.medications = response.data.data;
+          })
+    },
+  },
 };
 </script>
 
@@ -32,7 +48,7 @@ export default {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="med in medication" :key="med.id">
+              <tr v-for="med in medications" :key="med.id">
                 <td>{{ med.name }}</td>
                 <td>{{ med.quantity }}</td>
                 <td>{{ med.price }}</td>

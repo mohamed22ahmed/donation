@@ -12,6 +12,7 @@ export default {
       selectedMedication: {},
       editMode: false,
       offerMedications: [],
+      validationMessage: '',
 
       form: {
         offer_id: 0,
@@ -97,8 +98,8 @@ export default {
       formData.append('offer_id', this.form.offer_id);
 
       axios.post(route('offers.saveMedications'), formData)
-          .then((response) => {
-            this.offerMedications = response.data.data;
+          .then(() => {
+            this.loadOfferMedications();
           })
 
       this.closeMedication()
@@ -136,16 +137,16 @@ export default {
       formData.append('offer_medication_id', this.selectedMedication.id);
 
       axios.post(route('offers.updateMedications'), formData)
-          .then((response) => {
-            this.offerMedications = response.data.data;
+          .then(() => {
+            this.loadOfferMedications();
           })
       this.closeMedication();
     },
 
     deleteMedication(index) {
       axios.post(route('offers.deleteOfferMedication', [index, this.form.offer_id]))
-          .then((response) => {
-            this.offerMedications = response.data.data;
+          .then(() => {
+            this.loadOfferMedications();
           })
       this.closeMedication();
     },
@@ -164,11 +165,48 @@ export default {
     },
 
     closeShowMedication() {
+      this.validationMessage = '';
       $(this.$refs.showMedicationModal).modal('hide');
       $(this.$refs.addMedicationModal).modal('hide');
       $(this.$refs.addOfferModal).modal('show');
       document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
     },
+
+    saveOffer(){
+      this.form.price = 0;
+      for (let i = 0; i < this.offerMedications.length; i++) {
+          this.form.price += this.offerMedications[i].price * this.offerMedications[i].quantity;
+      }
+
+      axios.post(route('offers.store'), this.form)
+          .then(() => {
+            this.closeModal();
+          })
+    },
+
+    checkQuantity(){
+      for (let i = 0; i < this.medications.length; i++) {
+        if (this.medications[i].id === this.tempForm.id) {
+          if(this.tempForm.quantity > this.medications[i].quantity || this.tempForm.quantity <= 0){
+            this.validationMessage = 'Quantity must be between 1 and ' + this.medications[i].quantity
+          }else{
+            this.validationMessage = ''
+          }
+        }
+      }
+    },
+
+    checkPrice(){
+      for (let i = 0; i < this.medications.length; i++) {
+        if (this.medications[i].id === this.tempForm.id) {
+          if(this.tempForm.price < 0){
+            this.validationMessage = 'Price must be greater than or equal to 0'
+          }else{
+            this.validationMessage = ''
+          }
+        }
+      }
+    }
   },
 };
 </script>
@@ -244,6 +282,7 @@ export default {
           </div>
 
           <div class="modal-footer border-top-0">
+            <button type="button" class="btn btn-primary" @click="saveOffer">Save</button>
             <button type="button" class="btn btn-danger" @click="closeModal">Close</button>
           </div>
         </div>
@@ -265,6 +304,9 @@ export default {
 
           <div class="modal-body">
             <form @submit.prevent="editMode ? updateMedication() : appendMedication()">
+              <div class="row mb-2 text-danger text-center justify-content-center" v-if="validationMessage != ''">
+                {{ validationMessage }}
+              </div>
               <div class="row mb-3">
                 <div class="col-md-12">
                   <label for="medication_id" class="form-label">Medication</label>
@@ -291,6 +333,7 @@ export default {
                       id="quantity"
                       class="form-control"
                       required
+                      @input="checkQuantity"
                   />
                 </div>
                 <div class="col-md-6">
@@ -302,13 +345,14 @@ export default {
                       id="price"
                       class="form-control"
                       required
+                      @input="checkPrice"
                   />
                 </div>
               </div>
 
               <div class="modal-footer border-top-0">
                 <button type="button" class="btn btn-danger" @click="closeMedication">Close</button>
-                <button type="submit" class="btn btn-primary" v-if="tempForm.id != -1">Create</button>
+                <button type="submit" class="btn btn-primary" v-if="tempForm.id !== -1 && validationMessage === ''">Create</button>
                 <button type="submit" class="btn btn-secondary" disabled v-else>Create</button>
               </div>
             </form>
