@@ -73,11 +73,10 @@ Route::middleware(['auth', 'verified'])
             ->prefix('orders')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
-                Route::post('/delete', 'delete')->name('delete');
+                Route::get('/getOffer/{id}', 'getOffer')->name('getOffer');
+                Route::get('/show/{id}', 'show')->name('show');
                 Route::post('/cancel/{id}', 'cancel')->name('cancel');
                 Route::post('/delete/{id}', 'delete')->name('delete');
-                Route::get('/show/{id}', 'show')->name('show');
-                Route::get('/getOffer/{id}', 'getOffer')->name('getOffer');
             });
     });
 
