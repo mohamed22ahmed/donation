@@ -17,8 +17,11 @@ class Offer extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function offerMedications()
+    public function medications()
     {
-        return $this->hasMany(OfferMedication::class);
+        return $this->belongsToMany(Medication::class)
+            ->using(MedicationOffer::class);
     }
+
+
 }

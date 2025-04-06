@@ -73,9 +73,11 @@ Route::middleware(['auth', 'verified'])
             ->prefix('orders')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
-                Route::post('/store', 'store')->name('store');
-                Route::post('/update', 'update')->name('update');
                 Route::post('/delete', 'delete')->name('delete');
+                Route::post('/cancel/{id}', 'cancel')->name('cancel');
+                Route::post('/delete/{id}', 'delete')->name('delete');
+                Route::get('/show/{id}', 'show')->name('show');
+                Route::get('/getOffer/{id}', 'getOffer')->name('getOffer');
             });
     });
 

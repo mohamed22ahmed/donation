@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\OfferMedicationResource;
 use App\Models\Medication;
 use App\Models\Offer;
-use App\Models\OfferMedication;
+use App\Models\MedicationOffer;
 use Illuminate\Http\Request;
 use Inertia\Response;
 use function Laravel\Prompts\select;
@@ -37,7 +37,7 @@ class OffersController extends Controller
 
     private function subtractMedicationsQuantity($offerId): void
     {
-        $offerMedications = OfferMedication::where('offer_id', $offerId)->get();
+        $offerMedications = MedicationOffer::where('offer_id', $offerId)->get();
 
         foreach ($offerMedications as $offerMedication) {
             $medication = Medication::find($offerMedication->medication_id);
@@ -49,7 +49,7 @@ class OffersController extends Controller
 
     private function addMedicationsQuantity($offerId): void
     {
-        $offerMedications = OfferMedication::where('offer_id', $offerId)->get();
+        $offerMedications = MedicationOffer::where('offer_id', $offerId)->get();
 
         foreach ($offerMedications as $offerMedication) {
             $medication = Medication::find($offerMedication->medication_id);
@@ -61,7 +61,7 @@ class OffersController extends Controller
 
     public function getMedications($offerId)
     {
-        $offerMedications = OfferMedication::where('offer_id', $offerId)->select('medication_id')->get();
+        $offerMedications = MedicationOffer::where('offer_id', $offerId)->select('medication_id')->get();
 
         return Medication::where('user_id', auth()->user()->id)
             ->get()
@@ -91,7 +91,7 @@ class OffersController extends Controller
 
     public function getMedicationsForUpdate($offerId, $medicationId)
     {
-        $offerMedications = OfferMedication::where('offer_id', $offerId)->select('medication_id')->get();
+        $offerMedications = MedicationOffer::where('offer_id', $offerId)->select('medication_id')->get();
 
         return Medication::where('user_id', auth()->user()->id)
             ->get()
@@ -124,7 +124,7 @@ class OffersController extends Controller
 
     public function saveMedications(Request $request)
     {
-        OfferMedication::insert([
+        MedicationOffer::insert([
             'offer_id' => $request->offer_id,
             'medication_id' => $request->id,
             'quantity' => $request->quantity,
@@ -134,7 +134,7 @@ class OffersController extends Controller
 
     public function updateMedications(Request $request)
     {
-        OfferMedication::find($request->offer_medication_id)
+        MedicationOffer::find($request->offer_medication_id)
             ->update([
                 'medication_id' => $request->id,
                 'quantity' => $request->quantity,
@@ -144,17 +144,17 @@ class OffersController extends Controller
 
     public function getOfferMedications($id)
     {
-        $offerMedications = OfferMedication::where('offer_id', $id)->with('medication')->get();
+        $offerMedications = MedicationOffer::where('offer_id', $id)->with('medication')->get();
         return OfferMedicationResource::collection($offerMedications);
     }
 
     public function deleteOfferMedication($id, $offerId){
-        OfferMedication::find($id)->delete();
+        MedicationOffer::find($id)->delete();
     }
 
     public function delete($id){
         $this->addMedicationsQuantity($id);
-        OfferMedication::where('offer_id', $id)->delete();
+        MedicationOffer::where('offer_id', $id)->delete();
         Offer::find($id)->delete();
     }
 }

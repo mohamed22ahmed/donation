@@ -2,15 +2,31 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import "@fortawesome/fontawesome-free/css/all.css";
+import showOrderModal from "@/Pages/Orders/showOrderModal.vue";
 
 export default {
   components: {
+    showOrderModal,
     AuthenticatedLayout,
     Head,
   },
 
   props: {
     orders: Array
+  },
+
+  data() {
+    return {
+      offerId: -1,
+      isModalOpen: false,
+    }
+  },
+
+  methods: {
+    showOffer(offerId) {
+      this.offerId = offerId;
+      this.isModalOpen = true;
+    },
   },
 };
 </script>
@@ -27,16 +43,6 @@ export default {
 
     <div class="py-12">
       <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
-        <div class="float-right mb-2">
-          <button
-              type="button"
-              class="pl-3 text-blue-700 text-lg hover:text-gray-500"
-              style="font-size: 22px"
-          >
-            Make Order
-            <i class="fa-solid fa-plus"></i>
-          </button>
-        </div>
         <table>
           <thead>
           <tr>
@@ -45,7 +51,6 @@ export default {
             <th>Price</th>
             <th>Quantity</th>
             <th>Status</th>
-            <th>Medications</th>
             <th>Actions</th>
           </tr>
           </thead>
@@ -56,6 +61,7 @@ export default {
               <button
                   type="button"
                   class="pl-3 text-green-500 text-lg hover:text-gray-500"
+                  @click="showOffer(order.offer_id)"
               >
                 <i class="fa-solid fa-eye"></i>
               </button>
@@ -63,14 +69,6 @@ export default {
             <td>{{ order.price }}</td>
             <td>{{ order.quantity }}</td>
             <td>{{ order.status }}</td>
-            <td>
-              <button
-                  type="button"
-                  class="pl-3 text-green-500 text-lg hover:text-gray-500"
-              >
-                <i class="fa-solid fa-eye"></i>
-              </button>
-            </td>
             <td>
               <button
                   type="button"
@@ -97,6 +95,13 @@ export default {
       </div>
     </div>
   </AuthenticatedLayout>
+
+  <showOrderModal
+      v-if="isModalOpen"
+      :offerId="offerId"
+      @close="closeModal"
+  />
+
 </template>
 
 <style scoped>

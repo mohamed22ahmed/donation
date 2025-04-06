@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\OfferMedicationResource;
 use App\Models\Medication;
+use App\Models\Offer;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -79,18 +81,13 @@ class OrdersController extends Controller
         return redirect()->back();
     }
 
-    private function mapMedication($medication): array
+    public function getOffer($id)
     {
+        $offer = Offer::where('id', $id)->with(['medications'])->get();
+        dd($offer);
         return [
-            'id' => $medication['id'],
-            'name' => $medication['name'],
-            'quantity' => $medication['quantity'],
-            'price' => $medication['price'],
-            'total' => $medication['total'],
-            'type' => $medication['type'],
-            'status' => $medication['status'],
-            'expiry_date' => $medication['expiry_date'],
-            'image' => asset('storage/' . $medication['medication_img']) ?? asset('images/background.jpg'),
+            'offerMedications' => OfferMedicationResource::collection($offerMedications),
+            'price' => $offerMedications->offer->price
         ];
     }
 }

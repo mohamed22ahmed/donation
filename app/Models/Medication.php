@@ -18,8 +18,9 @@ class Medication extends Model
         'expiry_date'
     ];
 
-    public function offerMedications()
+    public function offers()
     {
-        return $this->hasMany(OfferMedication::class);
+        return $this->belongsToMany(Offer::class)
+            ->using(MedicationOffer::class);
     }
 }
