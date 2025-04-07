@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Order extends Model
 {
@@ -11,7 +12,6 @@ class Order extends Model
         'offer_id',
         'price',
         'quantity',
-        'medications',
         'status'
     ];
 
@@ -20,8 +20,8 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function offer()
+    public function offer(): BelongsTo
     {
-        return $this->belongsTo(Offer::class);
+        return $this->belongsTo(Offer::class)->with('medications');
     }
 }

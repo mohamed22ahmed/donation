@@ -1,7 +1,7 @@
 <script>
 export default {
   name: "showOfferModal",
-  props: ['offerId'],
+  props: ['orderId'],
 
   mounted() {
     this.getOffer();
@@ -21,7 +21,7 @@ export default {
 
   methods: {
     getOffer() {
-      axios.get(route('orders.getOffer', 10))
+      axios.get(route('orders.getOffer', 1))
           .then((response) => {
             this.medications = response.data.data;
             this.price = response.data.price;

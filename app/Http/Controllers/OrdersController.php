@@ -83,8 +83,8 @@ class OrdersController extends Controller
 
     public function getOffer($id)
     {
-        $offer = Offer::where('id', $id)->with(['medications'])->get();
-        dd($offer);
+        $order = Order::with(['offer', 'offer.medications'])->find($id);
+        dd($order);
         return [
             'offerMedications' => OfferMedicationResource::collection($offerMedications),
             'price' => $offerMedications->offer->price

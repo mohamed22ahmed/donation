@@ -22,7 +22,7 @@ export default {
     getOfferMedications() {
       axios.get(route('offers.getOfferMedications', this.offerId))
           .then((response) => {
-            this.medications = response.data.data;
+            this.medications = response.data.data[0].medications
           })
     },
   },
@@ -50,8 +50,8 @@ export default {
             <tbody>
               <tr v-for="med in medications" :key="med.id">
                 <td>{{ med.name }}</td>
-                <td>{{ med.quantity }}</td>
                 <td>{{ med.price }}</td>
+                <td>{{ med.quantity }}</td>
               </tr>
               <tr v-if="price != ''">
                 <td>Total Price</td>

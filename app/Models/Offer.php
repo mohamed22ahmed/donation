@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Offer extends Model
 {
     protected $fillable = [
         'user_id',
         'price',
-        'medications'
     ];
 
     public function user()
@@ -17,11 +17,14 @@ class Offer extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function medications()
+    public function medications(): BelongsToMany
     {
         return $this->belongsToMany(Medication::class)
-            ->using(MedicationOffer::class);
+            ->withPivot('quantity', 'price');
     }
 
-
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
