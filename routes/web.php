@@ -65,7 +65,7 @@ Route::middleware(['auth', 'verified'])
                 Route::get('/getMedicationsForUpdate/{offerId}/{offerMedicationId}', 'getMedicationsForUpdate')->name('getMedicationsForUpdate');
                 Route::post('/offer/save_medications', 'saveMedications')->name('saveMedications');
                 Route::post('/offer/update_medications', 'updateMedications')->name('updateMedications');
-                Route::post('/offer/delete_medications/{id}/{offerId}', 'deleteOfferMedication')->name('deleteOfferMedication');
+                Route::post('/offer/delete_medications/{id}', 'deleteOfferMedication')->name('deleteOfferMedication');
             });
 
         Route::controller(OrdersController::class)

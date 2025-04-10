@@ -15,12 +15,15 @@ export default {
   },
 
   props: {
-    offers: Array,
+    offers: {
+      type: Object,
+      default: () => ({}),
+    },
     medications: Array
   },
 
   mounted() {
-    this.userOffers = this.offers;
+    this.userOffers = this.offers.data;
   },
 
   data() {
@@ -57,7 +60,7 @@ export default {
     getOffers(){
       axios.get(route('offers.getOffers'))
           .then((response) => {
-            this.userOffers = response.data;
+            this.userOffers = response.data.data;
           });
     },
 

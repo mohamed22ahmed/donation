@@ -68,7 +68,8 @@ export default {
     loadOfferMedications(){
       axios.get(route('offers.getOfferMedications', this.form.offer_id))
           .then((response) => {
-            this.offerMedications = response.data.data;
+            console.log(response)
+            this.offerMedications = response.data.data[0]['medications']
           })
     },
 
@@ -143,8 +144,8 @@ export default {
       this.closeMedication();
     },
 
-    deleteMedication(index) {
-      axios.post(route('offers.deleteOfferMedication', [index, this.form.offer_id]))
+    deleteMedication(id) {
+      axios.post(route('offers.deleteOfferMedication', id))
           .then(() => {
             this.loadOfferMedications();
           })
@@ -270,7 +271,7 @@ export default {
                       <button
                           type="button"
                           class="pl-3 text-red-500 text-lg hover:text-gray-500"
-                          @click="deleteMedication(medication.id)"
+                          @click="deleteMedication(medication.relation_id)"
                       >
                         <i class="fa-solid fa-trash"></i>
                       </button>
@@ -382,7 +383,6 @@ export default {
         </div>
       </div>
     </div>
-
   </div>
 </template>
 

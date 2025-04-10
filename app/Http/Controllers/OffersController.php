@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\OfferMedicationResource;
+use App\Http\Resources\OfferResource;
 use App\Models\Medication;
 use App\Models\Offer;
 use App\Models\MedicationOffer;
@@ -22,14 +23,19 @@ class OffersController extends Controller
 
     public function getOffers()
     {
-        return Offer::where('user_id', auth()->user()->id)->get();
+        $offers = Offer::where('user_id', auth()->user()->id)
+            ->where('active', true)
+            ->with('medications')
+            ->get();
+
+        return OfferResource::collection($offers);
     }
 
     public function store(Request $request) {
-        Offer::create([
-            'id' => $request->offer_id,
-            'user_id' => auth()->user()->id,
-            'price' => $request->price
+        Offer::find($request->offer_id)
+            ->update([
+            'price' => $request->price,
+            'active' => true
         ]);
 
         $this->subtractMedicationsQuantity($request->offer_id);
@@ -119,7 +125,16 @@ class OffersController extends Controller
 
     public function getNewId()
     {
-        return Offer::query()->max('id') + 1;
+        $lastId = Offer::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->first()?->id;
+
+        if(MedicationOffer::where('offer_id', $lastId)->count() == 0 || $lastId == null){
+            Offer::insert([
+                'user_id' => auth()->user()->id,
+                'price' => 0
+            ]);
+            return $lastId + 1;
+        }
+        return $lastId;
     }
 
     public function saveMedications(Request $request)
@@ -144,12 +159,23 @@ class OffersController extends Controller
 
     public function getOfferMedications($id)
     {
-        $offer = Offer::where('id', $id)->with('medications')->get();
+        $offer = Offer::where('id', $id)
+            ->with(['medications' => function ($query) {
+                $query->withPivot('id');
+            }])
+            ->get();
+
         return OfferMedicationResource::collection($offer);
     }
 
-    public function deleteOfferMedication($id, $offerId){
-        MedicationOffer::find($id)->delete();
+    public function deleteOfferMedication($id){
+        $medicationOffer = MedicationOffer::find($id);
+        $medication = Medication::find($medicationOffer->medication_id);
+        $medication->quantity += $medicationOffer->quantity;
+        $medication->total = $medication->quantity * $medication->price;
+        $medication->save();
+
+        $medicationOffer->delete();
     }
 
     public function delete($id){

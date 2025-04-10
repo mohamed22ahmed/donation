@@ -10,6 +10,7 @@ class Offer extends Model
     protected $fillable = [
         'user_id',
         'price',
+        'active'
     ];
 
     public function user()
