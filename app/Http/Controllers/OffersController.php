@@ -32,13 +32,13 @@ class OffersController extends Controller
     }
 
     public function store(Request $request) {
-        Offer::find($request->offer_id)
-            ->update([
-            'price' => $request->price,
-            'active' => true
-        ]);
-
-        $this->subtractMedicationsQuantity($request->offer_id);
+        if(MedicationOffer::where('offer_id', $request->offer_id)->count() != 0) {
+            Offer::find($request->offer_id)
+                ->update([
+                    'price' => $request->price,
+                    'active' => true
+                ]);
+        }
     }
 
     private function subtractMedicationsQuantity($offerId): void
@@ -46,23 +46,18 @@ class OffersController extends Controller
         $offerMedications = MedicationOffer::where('offer_id', $offerId)->get();
 
         foreach ($offerMedications as $offerMedication) {
-            $medication = Medication::find($offerMedication->medication_id);
-            $medication->quantity -= $offerMedication->quantity;
-            $medication->total = $medication->quantity * $medication->price;
-            $medication->save();
+            $this->updateMedicationQuantityAndTotal($offerMedication->medication_id, $offerMedication->quantity, 'subtract');
         }
     }
 
-    private function addMedicationsQuantity($offerId): void
+    private function updateMedicationQuantityAndTotal($id, $quantity, $addOrSubtract = 'add')
     {
-        $offerMedications = MedicationOffer::where('offer_id', $offerId)->get();
-
-        foreach ($offerMedications as $offerMedication) {
-            $medication = Medication::find($offerMedication->medication_id);
-            $medication->quantity += $offerMedication->quantity;
-            $medication->total = $medication->quantity * $medication->price;
-            $medication->save();
-        }
+        $medication = Medication::find($id);
+        $medication->quantity = $addOrSubtract == 'subtract' ?
+            $medication->quantity - $quantity :
+            $medication->quantity + $quantity;
+        $medication->total = $medication->quantity * $medication->price;
+        $medication->save();
     }
 
     public function getMedications($offerId)
@@ -125,20 +120,25 @@ class OffersController extends Controller
 
     public function getNewId()
     {
-        $lastId = Offer::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->first()?->id;
+        $lastId = Offer::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->first();
+        if($lastId?->active == false){
+            return $lastId->id;
+        }
 
-        if(MedicationOffer::where('offer_id', $lastId)->count() == 0 || $lastId == null){
+        if(MedicationOffer::where('offer_id', $lastId?->id)->count() != 0 || $lastId == null){
             Offer::insert([
                 'user_id' => auth()->user()->id,
                 'price' => 0
             ]);
-            return $lastId + 1;
+            return $lastId->id + 1;
         }
-        return $lastId;
+        return $lastId->id;
     }
 
     public function saveMedications(Request $request)
     {
+        $this->updateMedicationQuantityAndTotal($request->id, $request->quantity, 'subtract');
+
         MedicationOffer::insert([
             'offer_id' => $request->offer_id,
             'medication_id' => $request->id,
@@ -169,18 +169,23 @@ class OffersController extends Controller
     }
 
     public function deleteOfferMedication($id){
-        $medicationOffer = MedicationOffer::find($id);
-        $medication = Medication::find($medicationOffer->medication_id);
-        $medication->quantity += $medicationOffer->quantity;
-        $medication->total = $medication->quantity * $medication->price;
-        $medication->save();
-
-        $medicationOffer->delete();
+        $offerMedication = MedicationOffer::find($id);
+        $this->updateMedicationQuantityAndTotal($offerMedication->medication_id, $offerMedication->quantity);
+        $offerMedication->delete();
     }
 
     public function delete($id){
         $this->addMedicationsQuantity($id);
         MedicationOffer::where('offer_id', $id)->delete();
         Offer::find($id)->delete();
+    }
+
+    private function addMedicationsQuantity($offerId): void
+    {
+        MedicationOffer::where('offer_id', $offerId)
+            ->get()
+            ->each(function ($offerMedication) {
+                $this->updateMedicationQuantityAndTotal($offerMedication->medication_id, $offerMedication->quantity);
+            });
     }
 }
