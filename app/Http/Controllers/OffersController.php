@@ -92,27 +92,29 @@ class OffersController extends Controller
 
     public function getMedicationsForUpdate($offerId, $medicationId)
     {
-        $offerMedications = MedicationOffer::where('offer_id', $offerId)->select('medication_id')->get();
+        $med = Medication::find($medicationId);
+        $offerMedications = MedicationOffer::where('offer_id', $offerId)
+            ->select('medication_id', 'quantity')
+            ->get()
+            ->keyBy('medication_id');
 
         return Medication::where('user_id', auth()->user()->id)
             ->get()
-            ->map(function ($medication) use ($offerMedications, $medicationId) {
-                $selected = false;
-                foreach ($offerMedications as $offerMedication) {
-                    if ($offerMedication->medication_id == $medication->id) {
-                        if($offerMedication->medication_id != $medicationId){
-                            $selected = true;
-                        }
-                        break;
-                    }
-                }
+            ->map(function ($medication) use ($offerMedications, $medicationId, $med) {
+                $isInOffer = $offerMedications->has($medication->id) &&
+                    $medication->id != $medicationId;
 
-                if (!$selected) {
-                    return MedicationsController::mapMedication($medication);
-                }
+                if (!$isInOffer) {
+                    $mappedMedication = MedicationsController::mapMedication($medication);
+
+                    if ($offerMedications->has($medication->id)) {
+                        $mappedMedication['quantity'] = $offerMedications[$medication->id]->quantity + $med->quantity;
+                    }
+
+                    return $mappedMedication;                }
             })
             ->filter(function ($medication) {
-                return !is_null($medication);
+                return !is_null($medication) && $medication['quantity'] != 0;
             })
             ->values()
             ->toArray();
@@ -149,12 +151,17 @@ class OffersController extends Controller
 
     public function updateMedications(Request $request)
     {
-        MedicationOffer::find($request->offer_medication_id)
-            ->update([
-                'medication_id' => $request->id,
-                'quantity' => $request->quantity,
-                'price' => $request->price
-            ]);
+        $medicationOffer = MedicationOffer::find($request->relation_id);
+        if($medicationOffer != null){
+            $this->updateMedicationQuantityAndTotal($medicationOffer->medication_id, $medicationOffer->quantity);
+            MedicationOffer::find($request->relation_id)
+                ->update([
+                    'medication_id' => $request->id,
+                    'quantity' => $request->quantity,
+                    'price' => $request->price
+                ]);
+            $this->updateMedicationQuantityAndTotal($request->id, $request->quantity, 'subtract');
+        }
     }
 
     public function getOfferMedications($id)

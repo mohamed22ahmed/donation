@@ -19,6 +19,7 @@ export default {
         price: 0,
       },
       tempForm: {
+        relation_id: 0,
         id: -1,
         name: '',
         quantity: 0,
@@ -109,21 +110,22 @@ export default {
     editMedication(medication) {
       this.selectedMedication = medication;
       this.editMode = true;
-      this.getMedicationsWhenUpdate(medication.medication_id);
+      this.getMedicationsWhenUpdate(medication.id);
       this.fillTempFormWithMedication(medication);
       $(this.$refs.addMedicationModal).modal('show');
       $(this.$refs.addOfferModal).modal('hide');
     },
 
     fillTempFormWithMedication(medication){
-      this.tempForm.id = medication.medication_id;
+      this.tempForm.relation_id = medication.relation_id;
+      this.tempForm.id = medication.id;
       this.tempForm.name = medication.name;
       this.tempForm.quantity = medication.quantity;
       this.tempForm.price = medication.price;
     },
 
-    getMedicationsWhenUpdate(index) {
-      axios.get(route('offers.getMedicationsForUpdate', [this.form.offer_id, index]))
+    getMedicationsWhenUpdate(medication_id) {
+      axios.get(route('offers.getMedicationsForUpdate', [this.form.offer_id, medication_id]))
           .then((response) => {
             this.medications = response.data
           })
@@ -135,7 +137,6 @@ export default {
         formData.append(key, this.tempForm[key]);
       }
       formData.append('offer_id', this.form.offer_id);
-      formData.append('offer_medication_id', this.selectedMedication.id);
 
       axios.post(route('offers.updateMedications'), formData)
           .then(() => {
@@ -294,7 +295,8 @@ export default {
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header bg-light">
-            <h5 class="modal-title" id="addNewLabel">Add Medication</h5>
+            <h5 class="modal-title" id="addNewLabel" v-if="!editMode">Add Medication</h5>
+            <h5 class="modal-title" id="addNewLabel" v-else>Edit Medication</h5>
             <button
                 type="button"
                 class="btn-close"
@@ -353,7 +355,8 @@ export default {
 
               <div class="modal-footer border-top-0">
                 <button type="button" class="btn btn-danger" @click="closeMedication">Close</button>
-                <button type="submit" class="btn btn-primary" v-if="tempForm.id !== -1 && validationMessage === ''">Create</button>
+                <button type="submit" class="btn btn-primary" v-if="tempForm.id !== -1 && validationMessage === '' && editMode == false">Create</button>
+                <button type="submit" class="btn btn-success" v-else-if="tempForm.id !== -1 && validationMessage === '' && editMode == true">Update</button>
                 <button type="submit" class="btn btn-secondary" disabled v-else>Create</button>
               </div>
             </form>
