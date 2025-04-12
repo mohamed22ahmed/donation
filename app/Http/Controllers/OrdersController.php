@@ -13,14 +13,12 @@ class OrdersController extends Controller
 {
     public function index(): Response
     {
-        $orders = Order::where('user_id', auth()->user()->id)->with('offer')->get();
         return inertia()->render('Orders/index', [
-            'orders' => $orders,
+            'orders' => $this->getOrders(),
         ]);
     }
 
-    public function getOffer($id){
-        dd(Order::with('offer')->find($id)->toArray());
-        return Order::with('offer')->find($id)->toArray();
+    public function getOrders(){
+        return Order::where('user_id', auth()->user()->id)->with('offer')->get();
     }
 }

@@ -4,6 +4,7 @@ import { Head } from "@inertiajs/vue3";
 import "@fortawesome/fontawesome-free/css/all.css";
 import showOfferModal from "@/Pages/Offers/showOfferModal.vue";
 import showOrderModal from "@/Pages/Orders/showOrderModal.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -20,11 +21,16 @@ export default {
   data() {
     return {
       offerId: -1,
+      ordersCollection: [],
       isModalOpen: false,
       isOrderModalOpen: false,
       selectedOrder: {},
       price: 0,
     }
+  },
+
+  mounted() {
+    this.getOrders();
   },
 
   methods: {
@@ -35,13 +41,14 @@ export default {
     },
 
     showOrder(order) {
-      console.log(order)
       this.selectedOrder = order;
       this.isOrderModalOpen = true;
     },
 
     closeModal() {
-      this.getOrders();
+      if(!this.isOrderModalOpen && !this.isModalOpen){
+        this.getOrders();
+      }
       this.isModalOpen = false;
       this.isOrderModalOpen = false;
       this.price = 0;
@@ -49,7 +56,10 @@ export default {
     },
 
     getOrders() {
-      alert('s')
+      axios.get(route('orders.getOrders'))
+          .then((response) => {
+            this.ordersCollection = response.data;
+          });
     }
   },
 };
@@ -79,7 +89,7 @@ export default {
           </tr>
           </thead>
           <tbody>
-          <tr v-for="order in orders" :key="order.id">
+          <tr v-for="order in ordersCollection" :key="order.id">
             <td>{{ order.id }}</td>
             <td>
               <button
