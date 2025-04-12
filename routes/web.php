@@ -74,8 +74,8 @@ Route::middleware(['auth', 'verified'])
             ->group(function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('/getOrders', 'getOrders')->name('getOrders');
-                Route::post('/cancel/{id}', 'cancel')->name('cancel');
-                Route::post('/delete/{id}', 'delete')->name('delete');
+                Route::get('/cancel/{id}', 'cancelOrder')->name('cancel');
+                Route::get('/delete/{id}', 'deleteOrder')->name('delete');
             });
     });
 

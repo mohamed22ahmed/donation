@@ -46,9 +46,9 @@ export default {
     },
 
     closeModal() {
-      if(!this.isOrderModalOpen && !this.isModalOpen){
+      if(!this.isOrderModalOpen && !this.isModalOpen)
         this.getOrders();
-      }
+
       this.isModalOpen = false;
       this.isOrderModalOpen = false;
       this.price = 0;
@@ -60,7 +60,21 @@ export default {
           .then((response) => {
             this.ordersCollection = response.data;
           });
-    }
+    },
+
+    cancelOrder(orderId){
+      axios.get(route('orders.cancel', orderId))
+          .then(() => {
+            this.getOrders();
+          });
+    },
+
+    deleteOrder(orderId){
+      axios.get(route('orders.delete', orderId))
+          .then(() => {
+            this.getOrders();
+          });
+    },
   },
 };
 </script>
@@ -89,42 +103,44 @@ export default {
           </tr>
           </thead>
           <tbody>
-          <tr v-for="order in ordersCollection" :key="order.id">
-            <td>{{ order.id }}</td>
-            <td>
-              <button
-                  type="button"
-                  class="pl-3 text-green-500 text-lg hover:text-gray-500"
-                  @click="showOffer(order.offer)"
-              >
-                <i class="fa-solid fa-eye"></i>
-              </button>
-            </td>
-            <td>{{ order.price }}</td>
-            <td>{{ order.quantity }}</td>
-            <td>{{ order.status }}</td>
-            <td>
-              <button
-                  type="button"
-                  class="pl-3 text-green-500 text-lg hover:text-gray-500"
-                  @click="showOrder(order)"
-              >
-                <i class="fa-solid fa-eye"></i>
-              </button>
-              <button
-                  type="button"
-                  class="pl-3 text-blue-500 text-lg hover:text-gray-500"
-              >
-                <i class="fa-solid fa-pencil"></i>
-              </button>
-              <button
-                  type="button"
-                  class="pl-3 text-red-500 text-lg hover:text-gray-500"
-              >
-                <i class="fa-solid fa-trash"></i>
-              </button>
-            </td>
-          </tr>
+            <tr v-for="order in ordersCollection" :key="order.id">
+              <td>{{ order.id }}</td>
+              <td>
+                <button
+                    type="button"
+                    class="pl-3 text-green-500 text-lg hover:text-gray-500"
+                    @click="showOffer(order.offer)"
+                >
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </td>
+              <td>{{ order.price }}</td>
+              <td>{{ order.quantity }}</td>
+              <td>{{ order.status }}</td>
+              <td>
+                <button
+                    type="button"
+                    class="pl-3 text-green-500 text-lg hover:text-gray-500"
+                    @click="showOrder(order)"
+                >
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+                <button
+                    type="button"
+                    class="pl-3 text-orange-400 text-lg hover:text-gray-500"
+                    @click="cancelOrder(order.id)"
+                >
+                  <i class="fa-solid fa-ban"></i>
+                </button>
+                <button
+                    type="button"
+                    class="pl-3 text-red-500 text-lg hover:text-gray-500"
+                    @click="deleteOrder(order.id)"
+                >
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -143,7 +159,6 @@ export default {
       :order="selectedOrder"
       @close="closeModal"
   />
-
 </template>
 
 <style scoped>
