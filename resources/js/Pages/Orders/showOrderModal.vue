@@ -1,65 +1,57 @@
 <script>
 export default {
-  name: "showOfferModal",
-  props: ['orderId'],
+  name: "showOrderModal",
+  props: ['order'],
 
   mounted() {
-    this.getOffer();
-    $('#showOffer').modal('show');
+    $('#showOrder').modal('show');
   },
 
   data() {
     return {
       medications: [],
-      price: '',
     };
   },
 
   beforeUnmount() {
-    $('#showOffer').modal('hide');
-  },
-
-  methods: {
-    getOffer() {
-      axios.get(route('orders.getOffer', 1))
-          .then((response) => {
-            this.medications = response.data.data;
-            this.price = response.data.price;
-          })
-    },
+    $('#showOrder').modal('hide');
   },
 };
 </script>
 
 <template>
-  <div id="showOffer" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
+  <div id="showOrder" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addNewLabel">Offer Details</h5>
+          <h5 class="modal-title" id="addNewLabel">Order Details</h5>
           <button type="button" class="btn-close" @click="$emit('close')" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <table>
-            <thead>
+          <div class="row">
+            <div class="mb-3">Order ID: #{{ order.id }}</div>
+            <div class="mb-3">Price: {{ order.price }}</div>
+            <div class="mb-3">Quantity: {{ order.quantity }}</div>
+            <div class="mb-3">Status: {{ order.status }}</div>
+          </div>
+          <div class="row">
+            <table>
+              <thead>
               <tr>
                 <th>Medication</th>
                 <th>Price</th>
                 <th>Quantity</th>
               </tr>
-            </thead>
-            <tbody>
-              <tr v-for="med in medications" :key="med.id">
+              </thead>
+              <tbody>
+              <tr v-for="med in order.offer.medications" :key="med.id">
                 <td>{{ med.name }}</td>
-                <td>{{ med.quantity }}</td>
-                <td>{{ med.price }}</td>
+                <td>{{ med.pivot.price }}</td>
+                <td>{{ med.pivot.quantity }}</td>
               </tr>
-              <tr>
-                <td>Total Price</td>
-                <td colspan="2">{{ price }}</td>
-              </tr>
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" @click="$emit('close')">Close</button>
@@ -82,8 +74,8 @@ export default {
 }
 
 table {
-   width: 100%;
-   border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 th, td {

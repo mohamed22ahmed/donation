@@ -2,10 +2,12 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import "@fortawesome/fontawesome-free/css/all.css";
+import showOfferModal from "@/Pages/Offers/showOfferModal.vue";
 import showOrderModal from "@/Pages/Orders/showOrderModal.vue";
 
 export default {
   components: {
+    showOfferModal,
     showOrderModal,
     AuthenticatedLayout,
     Head,
@@ -19,14 +21,36 @@ export default {
     return {
       offerId: -1,
       isModalOpen: false,
+      isOrderModalOpen: false,
+      selectedOrder: {},
+      price: 0,
     }
   },
 
   methods: {
-    showOffer(offerId) {
-      this.offerId = offerId;
+    showOffer(offer) {
+      this.offerId = offer.id;
+      this.price = offer.price;
       this.isModalOpen = true;
     },
+
+    showOrder(order) {
+      console.log(order)
+      this.selectedOrder = order;
+      this.isOrderModalOpen = true;
+    },
+
+    closeModal() {
+      this.getOrders();
+      this.isModalOpen = false;
+      this.isOrderModalOpen = false;
+      this.price = 0;
+      this.selectedOrder = {};
+    },
+
+    getOrders() {
+      alert('s')
+    }
   },
 };
 </script>
@@ -61,7 +85,7 @@ export default {
               <button
                   type="button"
                   class="pl-3 text-green-500 text-lg hover:text-gray-500"
-                  @click="showOffer(order.offer_id)"
+                  @click="showOffer(order.offer)"
               >
                 <i class="fa-solid fa-eye"></i>
               </button>
@@ -73,6 +97,7 @@ export default {
               <button
                   type="button"
                   class="pl-3 text-green-500 text-lg hover:text-gray-500"
+                  @click="showOrder(order)"
               >
                 <i class="fa-solid fa-eye"></i>
               </button>
@@ -96,9 +121,16 @@ export default {
     </div>
   </AuthenticatedLayout>
 
-  <showOrderModal
+  <showOfferModal
       v-if="isModalOpen"
       :offerId="offerId"
+      :price="price"
+      @close="closeModal"
+  />
+
+  <showOrderModal
+      v-if="isOrderModalOpen"
+      :order="selectedOrder"
       @close="closeModal"
   />
 
