@@ -20,7 +20,7 @@ class OrdersController extends Controller
     }
 
     public function getOrders(){
-        return Order::where('user_id', auth()->user()->id)->with('offer')->get();
+        return Order::where('user_id', auth()->user()->id)->with(['offer', 'rating'])->get();
     }
 
     public function cancelOrder($id){

@@ -77,6 +77,8 @@ Route::middleware(['auth', 'verified'])
                 Route::get('/cancel/{id}', 'cancelOrder')->name('cancel');
                 Route::get('/delete/{id}', 'deleteOrder')->name('delete');
             });
+
+
     });
 
 //Route::resource('ratings', MedicationsController::class)->middleware(['auth', 'verified']);

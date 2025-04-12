@@ -1,6 +1,9 @@
 <script>
+import StarRatingDisplay from "@/Pages/Ratings/strRatingDisplay.vue";
+
 export default {
   name: "showOrderModal",
+  components: {StarRatingDisplay},
   props: ['order'],
 
   mounted() {
@@ -33,6 +36,10 @@ export default {
             <div class="mb-3">Price: {{ order.price }}</div>
             <div class="mb-3">Quantity: {{ order.quantity }}</div>
             <div class="mb-3">Status: {{ order.status }}</div>
+            <div class="mb-3">Rating:
+              <StarRatingDisplay :rating="order.rating[0]?.degree || 0" />
+              <span class="text-sm text-gray-500 ml-1">({{ order.rating[0]?.degree || 0 }})</span>
+            </div>
           </div>
           <div class="row">
             <table>

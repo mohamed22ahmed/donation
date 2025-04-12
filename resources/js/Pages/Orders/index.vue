@@ -4,6 +4,7 @@ import { Head } from "@inertiajs/vue3";
 import "@fortawesome/fontawesome-free/css/all.css";
 import showOfferModal from "@/Pages/Offers/showOfferModal.vue";
 import showOrderModal from "@/Pages/Orders/showOrderModal.vue";
+import StarRatingDisplay from "@/Pages/Ratings/strRatingDisplay.vue";
 import axios from "axios";
 
 export default {
@@ -12,6 +13,7 @@ export default {
     showOrderModal,
     AuthenticatedLayout,
     Head,
+    StarRatingDisplay
   },
 
   props: {
@@ -99,6 +101,7 @@ export default {
             <th>Price</th>
             <th>Quantity</th>
             <th>Status</th>
+            <th>Rating</th>
             <th>Actions</th>
           </tr>
           </thead>
@@ -117,6 +120,10 @@ export default {
               <td>{{ order.price }}</td>
               <td>{{ order.quantity }}</td>
               <td>{{ order.status }}</td>
+              <td>
+                <StarRatingDisplay :rating="order.rating[0]?.degree || 0" />
+                <span class="text-sm text-gray-500 ml-1">({{ order.rating[0]?.degree || 0 }})</span>
+              </td>
               <td>
                 <button
                     type="button"
