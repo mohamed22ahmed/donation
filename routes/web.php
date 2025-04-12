@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MedicationsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\OffersController;
+use App\Http\Controllers\RatingsController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -73,12 +74,20 @@ Route::middleware(['auth', 'verified'])
             ->prefix('orders')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
+                Route::get('/show/{id}', 'show')->name('show');
                 Route::get('/getOrders', 'getOrders')->name('getOrders');
                 Route::get('/cancel/{id}', 'cancelOrder')->name('cancel');
                 Route::get('/delete/{id}', 'deleteOrder')->name('delete');
             });
 
-
+        Route::controller(RatingsController::class)
+            ->name('ratings.')
+            ->prefix('ratings')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/getRatings', 'getRatings')->name('getRatings');
+                Route::get('/delete/{id}', 'deleteRating')->name('delete');
+            });
     });
 
 //Route::resource('ratings', MedicationsController::class)->middleware(['auth', 'verified']);
