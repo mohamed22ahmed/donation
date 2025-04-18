@@ -35,7 +35,7 @@ const getActiveClass = (routeUrl) => {
               :class="`rounded-md px-3 py-2 ${getActiveClass(route('home'))}`"
               class="ring-1 ring-transparent transition hover:bg-gray-700 hover:text-white"
           >
-            Home
+            Welcome
           </Link>
           <Link
               :href="route('about')"

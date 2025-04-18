@@ -9,9 +9,7 @@ import Offer from '@/Components/Offer.vue';
 
     <AuthenticatedLayout>
         <template #header>
-            <h2
-                class="text-xl font-semibold leading-tight text-gray-800"
-            >
+            <h2 class="text-xl font-semibold leading-tight text-gray-800">
                 Home
             </h2>
         </template>
