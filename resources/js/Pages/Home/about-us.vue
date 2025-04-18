@@ -57,11 +57,11 @@ const getActiveClass = (routeUrl) => {
         <div class="flex justify-end space-x-4">
           <Link
               v-if="$page.props.auth.user"
-              :href="route('dashboard')"
-              :class="`rounded-md px-3 py-2 ${getActiveClass(route('dashboard'))}`"
+              :href="route('dashboard.index')"
+              :class="`rounded-md px-3 py-2 ${getActiveClass(route('dashboard.index'))}`"
               class="ring-1 ring-transparent transition hover:bg-gray-700 hover:text-white"
           >
-            Dashboard
+            Home
           </Link>
           <template v-else>
             <Link

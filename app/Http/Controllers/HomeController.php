@@ -35,7 +35,7 @@ class HomeController extends Controller
 
     public function dashboard(): Response
     {
-        return Inertia::render('Dashboard');
+        return Inertia::render('Dashboard.index');
     }
 
     public static function returnedResponse($image): array

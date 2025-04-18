@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MedicationsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\OffersController;
@@ -32,13 +33,20 @@ Route::controller(VerificationController::class)
 
 Route::middleware(['auth', 'verified'])
     ->group(function () {
-        Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
         Route::controller(ProfileController::class)
             ->name('profile.')
             ->group(function () {
                 Route::get('/profile', 'edit')->name('edit');
                 Route::patch('/profile', 'update')->name('update');
                 Route::delete('/profile', 'destroy')->name('destroy');
+            });
+
+        Route::controller(DashboardController::class)
+            ->name('dashboard.')
+            ->prefix('dashboard')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::post('/orderNow', 'orderNow')->name('orderNow');
             });
 
         Route::controller(MedicationsController::class)
@@ -89,7 +97,5 @@ Route::middleware(['auth', 'verified'])
                 Route::get('/delete/{id}', 'deleteRating')->name('delete');
             });
     });
-
-//Route::resource('ratings', MedicationsController::class)->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';
