@@ -49,6 +49,7 @@ Route::middleware(['auth', 'verified'])
                 Route::get('/getOffers', 'getOffers')->name('getOffers');
                 Route::get('/getRatings', 'getRatings')->name('getRatings');
                 Route::get('/orderNow/{id}', 'orderNow')->name('orderNow');
+                Route::post('/rateOrder', 'rateOrder')->name('rateOrder');
             });
 
         Route::controller(MedicationsController::class)

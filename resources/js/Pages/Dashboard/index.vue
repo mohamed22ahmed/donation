@@ -14,8 +14,8 @@ export default {
   },
 
   mounted() {
-    this.getOffers();
-    this.getRatings();
+    this.getOffers()
+    this.getRatings()
   },
 
   data() {
@@ -43,6 +43,11 @@ export default {
             this.ratings = response.data;
           });
     },
+
+    handleOfferUpdate() {
+      this.getOffers()
+      this.getRatings()
+    }
   }
 };
 </script>
@@ -57,43 +62,24 @@ export default {
             </h2>
         </template>
 
-      <div class="pt-12 row d-flex flex-wrap">
-        <div class="col-md-4 p-5 d-flex" v-for="offer in offers.data" :key="offer.id">
-          <Offer :offer="offer" class="flex-grow-1" @afterOrdering="rateOrder"/>
+        <div class="pt-12 row d-flex flex-wrap">
+          <div class="col-md-4 p-5 d-flex" v-for="offer in offers.data" :key="offer.id">
+            <Offer :offer="offer" class="flex-grow-1" @offer-updated="handleOfferUpdate"/>
+          </div>
         </div>
-      </div>
-
-      <div class="d-flex justify-content-center pagination-container pb-5">
-        <button
-            v-if="offers.total > 0"
-            v-for="page in offers.last_page"
-            :key="page"
-            @click="getOffers(page)"
-            class="paginate-buttons"
-            :class="{ active: page === currentPage, 'active-page': page === currentPage }"
-        >
-          {{ page }}
-        </button>
-      </div>
-
-      <div class="pt-12 row d-flex flex-wrap">
-        <div class="col-md-4 p-5 d-flex" v-for="rating in ratings.data" :key="rating.id">
-          <Rating :offer="offer" class="flex-grow-1"/>
+        <div class="d-flex justify-content-center pagination-container pb-5">
+          <button
+              v-if="offers.total > 0"
+              v-for="page in offers.last_page"
+              :key="page"
+              @click="getOffers(page)"
+              class="paginate-buttons"
+              :class="{ active: page === currentPage, 'active-page': page === currentPage }"
+          >
+            {{ page }}
+          </button>
         </div>
-      </div>
 
-      <div class="d-flex justify-content-center pagination-container pb-5">
-        <button
-            v-if="ratings.total > 0"
-            v-for="page in ratings.last_page"
-            :key="page"
-            @click="getRatings(page)"
-            class="paginate-buttons"
-            :class="{ active: page === currentRatingPage, 'active-page': page === currentRatingPage }"
-        >
-          {{ page }}
-        </button>
-      </div>
 
     </AuthenticatedLayout>
 </template>

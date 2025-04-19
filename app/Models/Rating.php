@@ -10,7 +10,7 @@ class Rating extends Model
     protected $fillable = [
         'user_id',
         'order_id',
-        'rating',
+        'degree',
     ];
 
     public function orders(): BelongsTo

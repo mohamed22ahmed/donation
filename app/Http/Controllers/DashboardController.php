@@ -43,7 +43,7 @@ class DashboardController extends Controller
             $quantity += $medication->pivot->quantity;
         }
 
-        Order::create([
+        $order = Order::create([
             'user_id' => auth()->user()->id,
             'offer_id' => $offer_id,
             'price' => $offer->price,
@@ -54,6 +54,17 @@ class DashboardController extends Controller
 
         Offer::find($offer_id)->update([
             'offered' => true
+        ]);
+
+        return $order->id;
+    }
+
+    public function rateOrder(Request $request)
+    {
+        Rating::create([
+            'user_id' => auth()->user()->id,
+            'order_id' => $request->order_id,
+            'degree' => $request->degree
         ]);
     }
 }
