@@ -23,6 +23,7 @@ export default {
       ratingsCollection: [],
       isOrderModalOpen: false,
       selectedOrder: {},
+      currentPage: 1,
     }
   },
 
@@ -50,8 +51,9 @@ export default {
       this.selectedOrder = {};
     },
 
-    getRatings() {
-      axios.get(route('ratings.getRatings'))
+    getRatings(page = 1){
+      this.currentPage = page;
+      axios.get('/ratings/getRatings?page=' + page)
           .then((response) => {
             this.ratingsCollection = response.data;
           });
@@ -89,7 +91,7 @@ export default {
           </tr>
           </thead>
           <tbody>
-            <tr v-for="rating in ratingsCollection" :key="rating.id">
+            <tr v-for="rating in ratingsCollection.data" :key="rating.id">
               <td>{{ rating.id }}</td>
               <td>
                 {{ rating.order_id }}
@@ -117,6 +119,19 @@ export default {
             </tr>
           </tbody>
         </table>
+
+        <div class="d-flex justify-content-center pagination-container pb-5 pt-4">
+          <button
+              v-if="ratingsCollection.total > 0"
+              v-for="page in ratingsCollection.last_page"
+              :key="page"
+              @click="getRatings(page)"
+              class="paginate-buttons"
+              :class="{ active: page === currentPage, 'active-page': page === currentPage }"
+          >
+            {{ page }}
+          </button>
+        </div>
       </div>
     </div>
   </AuthenticatedLayout>

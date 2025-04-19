@@ -15,7 +15,10 @@ class RatingsController extends Controller
     }
 
     public function getRatings(){
-        return Rating::where('user_id', auth()->user()->id)->with('orders')->get();
+        return Rating::where('user_id', auth()->user()->id)
+            ->with('order')
+            ->orderBy('created_at', 'desc')
+            ->paginate(9);
     }
 
     public function deleteRating($id){
