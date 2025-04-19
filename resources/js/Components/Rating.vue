@@ -1,12 +1,12 @@
 <script>
 export default {
-  name: "Offer",
-  props: ['offer'],
+  name: "Rating",
+  props: ['rating'],
 
 
   data() {
     return {
-      offer_id: this.offer.id,
+      rating_id: this.rating.id,
     };
   },
 
@@ -24,10 +24,10 @@ export default {
 <template>
 <div class="card">
   <div class="card-header">
-    <h3 class="card-title">Offer</h3>
+    <h3 class="card-title">Rating</h3>
   </div>
   <div class="card-body">
-    {{offer}}
+    {{rating}}
   </div>
 </div>
 </template>

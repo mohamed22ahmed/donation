@@ -46,6 +46,8 @@ Route::middleware(['auth', 'verified'])
             ->prefix('dashboard')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
+                Route::get('/getOffers', 'getOffers')->name('getOffers');
+                Route::get('/getRatings', 'getRatings')->name('getRatings');
                 Route::post('/orderNow', 'orderNow')->name('orderNow');
             });
 
