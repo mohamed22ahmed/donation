@@ -10,6 +10,7 @@ export default {
       quantity: 0,
       order_id: 0,
       degree: 0,
+      selectedRating: 0
     };
   },
 
@@ -35,7 +36,7 @@ export default {
     async rateOrder() {
       const formData = new FormData();
       formData.append('order_id', this.order_id);
-      formData.append('degree', this.degree);
+      formData.append('degree', this.selectedRating);
 
       await axios.post(route('dashboard.rateOrder'), formData);
       this.finish();
@@ -48,8 +49,12 @@ export default {
     },
 
     closeRatingModal() {
-      this.degree = 0
+      this.selectedRating = 0
       this.rateOrder();
+    },
+
+    setRating(rating) {
+      this.selectedRating = rating;
     },
   },
 };
@@ -117,20 +122,30 @@ export default {
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addNewLabel">Rate Order</h5>
+          <h5 class="modal-title" id="addNewLabel">Rate Your Order</h5>
           <button type="button" class="btn-close" @click="closeRatingModal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          rate
+        <div class="modal-body text-center">
+          <div class="rating-container mb-3">
+            <p>How would you rate your order experience?</p>
+            <div class="star-rating">
+              <span v-for="star in 5"
+                    :key="star"
+                    class="star"
+                    :class="{ 'filled': star <= selectedRating }"
+                    @click="setRating(star)">
+                ★
+              </span>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="rateOrder">Rate</button>
-          <button type="button" class="btn btn-danger" @click="closeRatingModal">Close</button>
+          <button type="button" class="btn btn-primary" @click="rateOrder" :disabled="selectedRating === 0">Submit Rating</button>
+          <button type="button" class="btn btn-outline-secondary" @click="closeRatingModal">Close</button>
         </div>
       </div>
     </div>
   </div>
-
 </template>
 
 <style scoped>
@@ -149,5 +164,24 @@ th, td {
 th {
   background-color: #4a5568;
   color: white;
+}
+
+.star-rating {
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.star {
+  color: #ddd;
+  transition: color 0.2s;
+  margin: 0 2px;
+}
+
+.star.filled {
+  color: #ffc107; /* Gold/yellow color for filled stars */
+}
+
+.star:hover {
+  color: #ffc107;
 }
 </style>

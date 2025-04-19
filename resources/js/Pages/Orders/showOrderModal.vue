@@ -33,6 +33,7 @@ export default {
         <div class="modal-body">
           <div class="row">
             <div class="mb-3">Order ID: #{{ order.id }}</div>
+            <div class="mb-3">Owner: {{ order.offer.user.name }}</div>
             <div class="mb-3">Price: {{ order.price }}</div>
             <div class="mb-3">Quantity: {{ order.quantity }}</div>
             <div class="mb-3">Status: {{ order.status }}</div>

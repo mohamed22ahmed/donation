@@ -20,7 +20,7 @@ class OrdersController extends Controller
     }
 
     public function show($id){
-        return Order::where('id', $id)->with(['offer', 'rating'])->first();
+        return Order::where('id', $id)->with(['offer', 'rating', 'offer.user'])->first();
     }
 
     public function getOrders(){
