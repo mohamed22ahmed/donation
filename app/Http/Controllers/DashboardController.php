@@ -17,7 +17,7 @@ class DashboardController extends Controller
 
     public function getOffers(Request $request)
     {
-        $offers = Offer::with(['medications', 'user'])->where('offered', false)->paginate(9);
+        $offers = Offer::with(['medications', 'user'])->where('offered', false)->orderBy('created_at', 'desc')->paginate(9);
 
         $offers->getCollection()->transform(function ($offer) {
             $offer->medications->each(function ($medication) {

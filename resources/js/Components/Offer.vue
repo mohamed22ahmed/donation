@@ -62,10 +62,29 @@ export default {
 
 <template>
 <div class="card">
-  <div class="card-header">
+  <div class="card-header bg-gray-200">
     <h3 class="card-title">Offer</h3>
   </div>
   <div class="card-body">
+    <table class="mb-4" style="width:100%">
+      <thead>
+      <tr>
+        <th>Offer ID</th>
+        <th>Quantity</th>
+        <th>Total Price</th>
+        <th>Offer Owner</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>{{ offer.id }}</td>
+        <td>{{ quantity }}</td>
+        <td>{{ offer.price }}</td>
+        <td>{{ offer.user.name }}</td>
+      </tr>
+      </tbody>
+    </table>
+
     <table style="width:100%">
       <thead>
         <tr>
@@ -95,25 +114,9 @@ export default {
         </tr>
       </tbody>
     </table>
-
-    <table class="mt-4" style="width:100%">
-      <thead>
-        <tr>
-          <th>Quantity</th>
-          <th>Total Price</th>
-          <th>Offer Owner</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{ quantity }}</td>
-          <td>{{ offer.price }}</td>
-          <td>{{ offer.user.name }}</td>
-        </tr>
-        </tbody>
-    </table>
   </div>
-  <div class="modal-footer py-2 justify-content-center">
+  <hr>
+  <div class="modal-footer py-3 justify-content-center bg-gray-200">
     <button type="button" class="btn btn-primary" @click="orderNow">Order Now</button>
   </div>
 </div>
