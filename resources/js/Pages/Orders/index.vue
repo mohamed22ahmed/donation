@@ -98,6 +98,7 @@ export default {
           <tr>
             <th>#</th>
             <th>Offer</th>
+            <th>Offer Owner</th>
             <th>Price</th>
             <th>Quantity</th>
             <th>Status</th>
@@ -117,6 +118,7 @@ export default {
                   <i class="fa-solid fa-eye"></i>
                 </button>
               </td>
+              <td>{{ order.offer.user.name }}</td>
               <td>{{ order.price }}</td>
               <td>{{ order.quantity }}</td>
               <td>{{ order.status }}</td>
