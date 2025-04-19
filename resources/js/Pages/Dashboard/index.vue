@@ -4,9 +4,15 @@ import { Head } from "@inertiajs/vue3";
 import axios from 'axios';
 import Offer from '@/Components/Offer.vue';
 import Rating from "@/Components/Rating.vue";
+import StarRatingDisplay from "@/Pages/Ratings/strRatingDisplay.vue";
+import "@fortawesome/fontawesome-free/css/all.css";
+import showOrderModal from "@/Pages/Orders/showOrderModal.vue";
+
 
 export default {
   components: {
+    showOrderModal,
+    StarRatingDisplay,
     Rating,
     Offer,
     AuthenticatedLayout,
@@ -24,6 +30,8 @@ export default {
       ratings: {},
       currentPage: 1,
       currentRatingPage: 1,
+      isOrderModalOpen: false,
+      selectedOrder: {},
     };
   },
 
@@ -47,6 +55,24 @@ export default {
     handleOfferUpdate() {
       this.getOffers()
       this.getRatings()
+    },
+
+    showOrder(order_id) {
+      this.getOrder(order_id).then(() => {
+        this.isOrderModalOpen = true
+      })
+    },
+
+    async getOrder(order_id) {
+      const response = await axios.get(route('orders.show', order_id))
+
+      this.selectedOrder = response.data
+    },
+
+    closeModal() {
+      this.isOrderModalOpen = false;
+      this.selectedOrder = {};
+      this.getRatings()
     }
   }
 };
@@ -62,7 +88,10 @@ export default {
             </h2>
         </template>
 
+
         <div class="pt-12 row d-flex flex-wrap">
+          <div class="px-5 font-semibold" style="font-size: 30px">Offers</div>
+
           <div class="col-md-4 p-5 d-flex" v-for="offer in offers.data" :key="offer.id">
             <Offer :offer="offer" class="flex-grow-1" @offer-updated="handleOfferUpdate"/>
           </div>
@@ -80,8 +109,61 @@ export default {
           </button>
         </div>
 
+      <div class="pt-2 px-5">
+        <div class="font-semibold" style="font-size: 30px">Ratings</div>
+
+          <table>
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>Order</th>
+              <th>User</th>
+              <th>Rating</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="rating in ratings.data" :key="rating.id">
+              <td>{{ rating.id }}</td>
+              <td>
+                <button
+                    type="button"
+                    class="pl-3 text-green-500 text-lg hover:text-gray-500"
+                    @click="showOrder(rating.order_id)"
+                >
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </td>
+              <td>
+                {{ rating.user.name }}
+              </td>
+              <td>
+                <StarRatingDisplay :rating="rating.degree || 0" />
+                <span class="text-sm text-gray-500 ml-1">({{ rating.degree || 0 }})</span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+      </div>
+      <div class="d-flex justify-content-center pagination-container pb-5 pt-4">
+        <button
+            v-if="ratings.total > 0"
+            v-for="page in ratings.last_page"
+            :key="page"
+            @click="getRatings(page)"
+            class="paginate-buttons"
+            :class="{ active: page === currentRatingPage, 'active-page': page === currentRatingPage }"
+        >
+          {{ page }}
+        </button>
+      </div>
 
     </AuthenticatedLayout>
+
+  <showOrderModal
+      v-if="isOrderModalOpen"
+      :order="selectedOrder"
+      @close="closeModal"
+  />
 </template>
 
 <style>
@@ -108,5 +190,21 @@ export default {
 }
 .active-page:hover {
   background-color: #2988c8;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #4a5568;
+  color: white;
 }
 </style>

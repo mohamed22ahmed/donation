@@ -25,12 +25,10 @@ export default {
       })
     },
 
-    orderNow() {
-      axios.get(route('dashboard.orderNow', this.offer.id))
-          .then((response) => {
-            this.order_id = response.data
-            $('#showRating').modal('show');
-          })
+    async orderNow() {
+      const response = await axios.get(route('dashboard.orderNow', this.offer.id))
+      this.order_id = response.data
+      $('#showRating').modal('show');
     },
 
     async rateOrder() {
