@@ -19,7 +19,6 @@ return new class extends Migration
             $table->integer('quantity');
             $table->float('price');
             $table->string('status')->default(OrderStatus::PENDING->value);
-            $table->json('medications');
             $table->timestamps();
         });
     }

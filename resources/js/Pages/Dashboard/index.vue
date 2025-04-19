@@ -59,7 +59,7 @@ export default {
 
       <div class="pt-12 row d-flex flex-wrap">
         <div class="col-md-4 p-5 d-flex" v-for="offer in offers.data" :key="offer.id">
-          <Offer :offer="offer" class="flex-grow-1"/>
+          <Offer :offer="offer" class="flex-grow-1" @afterOrdering="rateOrder"/>
         </div>
       </div>
 

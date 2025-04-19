@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Offer;
+use App\Models\Order;
 use App\Models\Rating;
 use Illuminate\Http\Request;
 use Inertia\Response;
@@ -16,7 +17,17 @@ class DashboardController extends Controller
 
     public function getOffers(Request $request)
     {
-        return Offer::with('medications')->paginate(9);
+        $offers = Offer::with(['medications', 'user'])->where('offered', false)->paginate(9);
+
+        $offers->getCollection()->transform(function ($offer) {
+            $offer->medications->each(function ($medication) {
+                $medication->medication_img = asset('storage/' . $medication->medication_img) ?? asset('storage/medications/default.png');
+            });
+
+            return $offer;
+        });
+
+        return $offers;
     }
 
     public function getRatings(Request $request)
@@ -24,8 +35,25 @@ class DashboardController extends Controller
         return Rating::with('orders')->paginate(9);
     }
 
-    public function orderNow(Request $request)
+    public function orderNow($offer_id)
     {
-        dd($request->all);
+        $offer = Offer::find($offer_id)->with('medications')->first();
+        $quantity = 0;
+        foreach ($offer->medications as $medication) {
+            $quantity += $medication->pivot->quantity;
+        }
+
+        Order::create([
+            'user_id' => auth()->user()->id,
+            'offer_id' => $offer_id,
+            'price' => $offer->price,
+            'quantity' => $quantity,
+            'active' => true,
+            'status' => 'pending'
+        ]);
+
+        Offer::find($offer_id)->update([
+            'offered' => true
+        ]);
     }
 }
