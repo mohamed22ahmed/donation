@@ -24,7 +24,9 @@ class OrdersController extends Controller
     }
 
     public function getOrders(){
-        return Order::where('user_id', auth()->user()->id)->with(['offer', 'rating', 'offer.user'])->get();
+        return Order::where('user_id', auth()->user()->id)->with(['offer', 'rating', 'offer.user'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
     }
 
     public function cancelOrder($id){

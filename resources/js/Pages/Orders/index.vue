@@ -28,6 +28,7 @@ export default {
       isOrderModalOpen: false,
       selectedOrder: {},
       price: 0,
+      currentPage: 1,
     }
   },
 
@@ -57,8 +58,9 @@ export default {
       this.selectedOrder = {};
     },
 
-    getOrders() {
-      axios.get(route('orders.getOrders'))
+    getOrders(page = 1){
+        this.currentPage = page;
+        axios.get('/orders/getOrders?page=' + page)
           .then((response) => {
             this.ordersCollection = response.data;
           });
@@ -107,7 +109,7 @@ export default {
           </tr>
           </thead>
           <tbody>
-            <tr v-for="order in ordersCollection" :key="order.id">
+            <tr v-for="order in ordersCollection.data" :key="order.id">
               <td>{{ order.id }}</td>
               <td>
                 <button
@@ -152,6 +154,18 @@ export default {
             </tr>
           </tbody>
         </table>
+        <div class="d-flex justify-content-center pagination-container pb-5 pt-4">
+          <button
+              v-if="ordersCollection.total > 0"
+              v-for="page in ordersCollection.last_page"
+              :key="page"
+              @click="getOrders(page)"
+              class="paginate-buttons"
+              :class="{ active: page === currentPage, 'active-page': page === currentPage }"
+          >
+            {{ page }}
+          </button>
+        </div>
       </div>
     </div>
   </AuthenticatedLayout>
@@ -185,5 +199,30 @@ th, td {
 th {
   background-color: #4a5568;
   color: white;
+}
+
+.pagination-container {
+  display: flex;
+  column-gap: 10px;
+}
+.paginate-buttons {
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: rgb(242, 242, 242);
+  border: 1px solid rgb(217, 217, 217);
+  color: black;
+}
+.paginate-buttons:hover {
+  background-color: #d8d8d8;
+}
+.active-page {
+  background-color: #3498db;
+  border: 1px solid #3498db;
+  color: white;
+}
+.active-page:hover {
+  background-color: #2988c8;
 }
 </style>
