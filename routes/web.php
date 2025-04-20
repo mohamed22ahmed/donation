@@ -88,6 +88,7 @@ Route::middleware(['auth', 'verified'])
                 Route::get('/show/{id}', 'show')->name('show');
                 Route::get('/getOrders', 'getOrders')->name('getOrders');
                 Route::get('/cancel/{id}', 'cancelOrder')->name('cancel');
+                Route::get('/complete/{id}', 'completeOrder')->name('complete');
                 Route::get('/delete/{id}', 'deleteOrder')->name('delete');
             });
 

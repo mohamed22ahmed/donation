@@ -35,6 +35,12 @@ class OrdersController extends Controller
         ]);
     }
 
+    public function completeOrder($id){
+        Order::findOrFail($id)->update([
+            'status' => OrderStatus::COMPLETED,
+        ]);
+    }
+
     public function deleteOrder($id){
         Order::findOrFail($id)->delete();
     }

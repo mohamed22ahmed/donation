@@ -73,6 +73,13 @@ export default {
           });
     },
 
+    completeOrder(orderId){
+      axios.get(route('orders.complete', orderId))
+          .then(() => {
+            this.getOrders();
+          });
+    },
+
     deleteOrder(orderId){
       axios.get(route('orders.delete', orderId))
           .then(() => {
@@ -142,6 +149,13 @@ export default {
                     @click="cancelOrder(order.id)"
                 >
                   <i class="fa-solid fa-ban"></i>
+                </button>
+                <button
+                    type="button"
+                    class="pl-3 text-blue-500 text-lg hover:text-gray-500"
+                    @click="completeOrder(order.id)"
+                >
+                  <i class="fa-solid fa-check"></i>
                 </button>
                 <button
                     type="button"
