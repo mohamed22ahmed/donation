@@ -32,13 +32,33 @@ export default {
       currentRatingPage: 1,
       isOrderModalOpen: false,
       selectedOrder: {},
+      search: '',
+      sortBy: 'newest',
+      sortOptions: [
+        { value: 'newest', label: 'Newest' },
+        { value: 'oldest', label: 'Oldest' },
+        { value: 'price_high', label: 'Price: High to Low' },
+        { value: 'price_low', label: 'Price: Low to High' },
+      ]
     };
   },
 
+  computed: {
+    hasOffers() {
+      return this.offers.data && this.offers.data.length > 0;
+    }
+  },
+
   methods: {
-    getOffers(page = 1){
+    getOffers(page = 1) {
       this.currentPage = page;
-      axios.get('/dashboard/getOffers?page=' + page)
+      axios.get('/dashboard/getOffers', {
+            params: {
+              search: this.search,
+              sort: this.sortBy,
+              page: page
+            }
+          })
           .then((response) => {
             this.offers = response.data;
           });
@@ -88,14 +108,43 @@ export default {
             </h2>
         </template>
 
+      <div class="flex pt-5 row">
+        <div class="col-6 px-4 m-auto justify-content-center items-center">
+          <form @submit.prevent="getOffers">
+            <div class="flex">
+              <input type="text" name="search" v-model="search"
+                     class="form-control flex-grow rounded-l-lg p-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                     placeholder="Search for an offer">
 
-        <div class="pt-12 row d-flex flex-wrap">
-          <div class="px-5 font-semibold" style="font-size: 30px">Offers</div>
+              <select v-model="sortBy" @change="getOffers"
+                      class="mx-2 border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option v-for="option in sortOptions" :value="option.value" :key="option.value">
+                  {{ option.label }}
+                </option>
+              </select>
 
+              <button
+                  type="submit"
+                  class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-r-lg transition duration-200">
+                Search
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+        <div class="px-5 pt-5 font-semibold" style="font-size: 30px">Offers</div>
+
+        <div class="pt-2 row d-flex flex-wrap" v-if="hasOffers">
           <div class="col-md-4 p-5 d-flex" v-for="offer in offers.data" :key="offer.id">
             <Offer :offer="offer" class="flex-grow-1" @offer-updated="handleOfferUpdate"/>
           </div>
         </div>
+
+        <div class="px-5 ml-12 pt-4 row d-flex flex-wrap" v-else>
+          No offers found
+        </div>
+
         <div class="d-flex justify-content-center pagination-container pb-5">
           <button
               v-if="offers.total > 0"
@@ -109,42 +158,43 @@ export default {
           </button>
         </div>
 
-      <div class="pt-2 px-5">
-        <div class="font-semibold" style="font-size: 30px">Ratings</div>
+        <div class="pt-2 px-5">
+          <div class="font-semibold" style="font-size: 30px">Ratings</div>
 
-          <table>
-            <thead>
-            <tr>
-              <th>#</th>
-              <th>Order</th>
-              <th>User</th>
-              <th>Rating</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="rating in ratings.data" :key="rating.id">
-              <td>{{ rating.id }}</td>
-              <td>
-                <button
-                    type="button"
-                    class="pl-3 text-green-500 text-lg hover:text-gray-500"
-                    @click="showOrder(rating.order_id)"
-                >
-                  <i class="fa-solid fa-eye"></i>
-                </button>
-              </td>
-              <td>
-                {{ rating.user.name }}
-              </td>
-              <td>
-                <StarRatingDisplay :rating="rating.degree || 0" />
-                <span class="text-sm text-gray-500 ml-1">({{ rating.degree || 0 }})</span>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-      </div>
-      <div class="d-flex justify-content-center pagination-container pb-5 pt-4">
+            <table>
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Order</th>
+                <th>User</th>
+                <th>Rating</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="rating in ratings.data" :key="rating.id">
+                <td>{{ rating.id }}</td>
+                <td>
+                  <button
+                      type="button"
+                      class="pl-3 text-green-500 text-lg hover:text-gray-500"
+                      @click="showOrder(rating.order_id)"
+                  >
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </td>
+                <td>
+                  {{ rating.user.name }}
+                </td>
+                <td>
+                  <StarRatingDisplay :rating="rating.degree || 0" />
+                  <span class="text-sm text-gray-500 ml-1">({{ rating.degree || 0 }})</span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-center pagination-container pb-5 pt-4">
         <button
             v-if="ratings.total > 0"
             v-for="page in ratings.last_page"

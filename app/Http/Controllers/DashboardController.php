@@ -17,10 +17,28 @@ class DashboardController extends Controller
 
     public function getOffers(Request $request)
     {
-        $offers = Offer::with(['medications', 'user'])
-            ->where('offered', false)
-            ->orderBy('created_at', 'desc')
-            ->paginate(9);
+        $query = Offer::with(['medications', 'user'])
+            ->where('offered', false);
+
+        if($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->whereHas('medications', function($q) use ($searchTerm) {
+                $q->where('name', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        if($request->has('sort')) {
+            $sort = $request->sort;
+            if($sort == 'newest' || $sort == 'oldest') {
+                $direction = ($sort == 'newest' ? 'desc' : 'asc');
+                $query->orderBy('created_at', $direction);
+            }else{
+                $direction = $sort == 'price_high' ? 'desc' : 'asc';
+                $query->orderBy('price', $direction);
+            }
+        }
+
+        $offers = $query->paginate(10);
 
         $offers->getCollection()->transform(function ($offer) {
             $offer->medications->each(function ($medication) {
