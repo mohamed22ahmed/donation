@@ -5,7 +5,7 @@
       <span>{{ isOpen ? '−' : '+' }}</span>
     </div>
     <div class="chat-body" v-if="isOpen">
-      <div class="chat-messages">
+      <div class="chat-messages" ref="messagesContainer">
         <div v-for="(message, index) in messages" :key="index"
              class="message"
              :class="message.sender === 'user' ? 'user-message' : 'bot-message'">
@@ -34,16 +34,28 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, nextTick, watch } from 'vue';
 import axios from 'axios';
 
 const isOpen = ref(false);
 const question = ref('');
 const messages = ref([]);
 const isTyping = ref(false);
+const messagesContainer = ref(null);
 
 const toggleChat = () => {
   isOpen.value = !isOpen.value;
+  if (isOpen.value) {
+    scrollToBottom();
+  }
+};
+
+const scrollToBottom = () => {
+  nextTick(() => {
+    if (messagesContainer.value) {
+      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+    }
+  });
 };
 
 const askQuestion = async () => {
@@ -57,6 +69,8 @@ const askQuestion = async () => {
   const userQuestion = question.value;
   question.value = '';
   isTyping.value = true;
+
+  scrollToBottom();
 
   try {
     const formData = new FormData();
@@ -76,8 +90,13 @@ const askQuestion = async () => {
     console.error('API Error:', error);
   } finally {
     isTyping.value = false;
+    scrollToBottom();
   }
 };
+
+watch(messages, () => {
+  scrollToBottom();
+}, { deep: true });
 </script>
 
 <style scoped>
@@ -116,6 +135,7 @@ const askQuestion = async () => {
   overflow-y: auto;
   margin-bottom: 15px;
   padding-right: 5px;
+  scroll-behavior: smooth;
 }
 
 .message {
