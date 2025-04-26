@@ -6,6 +6,7 @@ use App\Models\Offer;
 use App\Models\Order;
 use App\Models\Rating;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Inertia\Response;
 
@@ -94,38 +95,20 @@ class DashboardController extends Controller
 
     public function ask(Request $request): string
     {
-        $client = new \GuzzleHttp\Client();
-
-        $response = $client->post('https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta', [
-            'headers' => [
-                'Authorization' => 'Bearer '.env('HF_API_KEY'),
-                'Content-Type' => 'application/json',
-            ],
-            'json' => [
-                'inputs' => "[Answer in 10 words or less] " . $request->question,
-                'parameters' => [
-                    'max_new_tokens' => 15,
-                    'min_new_tokens' => 1,
-                    'temperature' => 0.3,
-                    'repetition_penalty' => 1.2,
-                    'do_sample' => false,
-                ],
-                'options' => ['wait_for_model' => true]
-            ],
-            'timeout' => 30
+        $baseUrl = 'http://localhost:11434';
+        $response = Http::post($baseUrl . '/api/generate', [
+            'model' => 'mistral',
+            'prompt' => "Answer very briefly and concisely. " . $request->question,
+            'stream' => false,
         ]);
 
-        $responseData = json_decode($response->getBody(), true);
-        return $this->cleanResponse($responseData[0]['generated_text']);
+        $response = $response->json();
+        return $response['response'] ?? 'No reply from model.';
     }
 
     private function cleanResponse(string $response): string
     {
-        if (isset($responseData['error'])) {
-            return "Error: ".$responseData['error'];
-        }
-
-        $response = Str::after($response, '<|assistant|>');
-        return trim(preg_replace('/\s+/', ' ', $response));
+        $message = explode('assistant|>', $response)[1] ?? $response;
+        return trim(preg_replace('/\s+/', ' ', $message));
     }
 }

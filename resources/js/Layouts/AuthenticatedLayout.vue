@@ -184,7 +184,6 @@ const showingNavigationDropdown = ref(false);
                 </div>
             </nav>
 
-            <!-- Page Heading -->
             <header
                 class="bg-white shadow"
                 v-if="$slots.header"
@@ -194,9 +193,8 @@ const showingNavigationDropdown = ref(false);
                 </div>
             </header>
 
-            <!-- Page Content -->
             <main>
-                <slot />
+              <slot />
             </main>
 
           <div id="chat-popup"></div>

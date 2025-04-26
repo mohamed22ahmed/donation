@@ -108,15 +108,15 @@ export default {
             </h2>
         </template>
 
-      <div class="flex pt-5 row">
+        <div class="flex pt-5 row">
         <div class="col-6 px-4 m-auto justify-content-center items-center">
-          <form @submit.prevent="getOffers">
+          <form @submit.prevent="getOffers()">
             <div class="flex">
               <input type="text" name="search" v-model="search"
                      class="form-control flex-grow rounded-l-lg p-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                      placeholder="Search for an offer">
 
-              <select v-model="sortBy" @change="getOffers"
+              <select v-model="sortBy" @change="getOffers()"
                       class="mx-2 border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option v-for="option in sortOptions" :value="option.value" :key="option.value">
                   {{ option.label }}

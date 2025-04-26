@@ -1,7 +1,7 @@
 <template>
   <div class="chat-popup">
     <div class="chat-header" @click="toggleChat">
-      <span>AI Assistant</span>
+      <span>Chat with PharmaBridge</span>
       <span>{{ isOpen ? '−' : '+' }}</span>
     </div>
     <div class="chat-body" v-if="isOpen">
@@ -12,7 +12,7 @@
           {{ message.text }}
         </div>
         <div v-if="isTyping" class="typing-indicator">
-          AI is typing...
+          PharmaBridge is typing...
         </div>
       </div>
       <form @submit.prevent="askQuestion" class="chat-input">
