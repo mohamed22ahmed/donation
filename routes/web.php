@@ -50,6 +50,7 @@ Route::middleware(['auth', 'verified'])
                 Route::get('/getRatings', 'getRatings')->name('getRatings');
                 Route::get('/orderNow/{id}', 'orderNow')->name('orderNow');
                 Route::post('/rateOrder', 'rateOrder')->name('rateOrder');
+                Route::post('/ask', 'ask')->name('ask')->middleware('throttle:60,1');
             });
 
         Route::controller(MedicationsController::class)

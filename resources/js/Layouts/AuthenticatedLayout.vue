@@ -198,6 +198,8 @@ const showingNavigationDropdown = ref(false);
             <main>
                 <slot />
             </main>
+
+          <div id="chat-popup"></div>
         </div>
     </div>
 </template>
