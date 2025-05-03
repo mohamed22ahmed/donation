@@ -43,7 +43,7 @@ class DashboardController extends Controller
         $offers = $query->paginate(10);
 
         if($request->has('search')) {
-            if(!$offers){
+            if(!$offers->total()) {
                 NotificationSearch::create([
                     'user_id' => auth()->user()->id,
                     'search' => $request->search

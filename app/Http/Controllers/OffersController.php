@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Resources\OfferMedicationResource;
 use App\Http\Resources\OfferResource;
 use App\Models\Medication;
+use App\Models\Notification;
+use App\Models\NotificationSearch;
 use App\Models\Offer;
 use App\Models\MedicationOffer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Inertia\Response;
 use function Laravel\Prompts\select;
 
@@ -38,6 +41,47 @@ class OffersController extends Controller
                     'price' => $request->price,
                     'active' => true
                 ]);
+
+            $offer = Offer::where('id', (int)$request->offer_id)->with('medications')->first();
+            $this->searchInOffersAboutNotificationsSearch($offer);
+        }
+    }
+
+    private function searchInOffersAboutNotificationsSearch($offer){
+        $searches = NotificationSearch::where('user_id', '!=', auth()->user()->id)->get();
+        $searchesToNotify = [];
+        foreach($searches as $search) {
+            foreach ($offer->medications as $med) {
+                if (str_contains($med->name, $search->search)){
+                    $searchesToNotify[] = [
+                        'id' => $search->id,
+                        'user_id' => $search->user_id,
+                        'search' => $search->search
+                    ];
+                }
+            }
+        }
+
+        $this->sendNotificationsToUsers($searchesToNotify);
+    }
+
+    private function sendNotificationsToUsers($searchesToNotify){
+        foreach ($searchesToNotify as $item) {
+            $message = "there's an offer for the medicine #".$item['search']." you searched for before";
+            $response = Http::post('http://localhost:3000/emit', [
+                'event' => 'notification',
+                'data' => ['message' => $message],
+                'userId' => $item['user_id'],
+            ]);
+
+            if ($response->successful()) {
+                Notification::create([
+                    'message' => $message,
+                    'user_id' => $item['user_id']
+                ]);
+
+                NotificationSearch::find($item['id'])->delete();
+            }
         }
     }
 
@@ -124,7 +168,7 @@ class OffersController extends Controller
     {
         $lastId = Offer::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->first();
         if($lastId?->active == false){
-            return $lastId->id;
+            return $lastId?->id;
         }
 
         if(MedicationOffer::where('offer_id', $lastId?->id)->count() != 0 || $lastId == null){

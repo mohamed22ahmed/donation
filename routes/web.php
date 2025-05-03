@@ -61,7 +61,7 @@ Route::middleware(['auth', 'verified'])
                 Route::get('/getAuthUserId', 'getAuthUserId')->name('getAuthUserId');
                 Route::get('/getNotifications', 'getNotifications')->name('getNotifications');
                 Route::post('/sendNotification', 'sendNotification')->name('sendNotification');
-                Route::post('/MarkAsRead', 'MarkAsRead')->name('MarkAsRead');
+                Route::post('/MarkAsRead/{id}', 'MarkAsRead')->name('MarkAsRead');
                 Route::post('/MarkAllAsRead', 'MarkAllAsRead')->name('MarkAllAsRead');
             });
 

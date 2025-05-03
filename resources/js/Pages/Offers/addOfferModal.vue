@@ -180,7 +180,12 @@ export default {
           this.form.price += this.offerMedications[i].price * this.offerMedications[i].quantity;
       }
 
-      axios.post(route('offers.store'), this.form)
+      const formData = new FormData();
+      for (const key in this.form) {
+        formData.append(key, this.form[key]);
+      }
+
+      axios.post(route('offers.store'), formData)
           .then(() => {
             this.closeModal();
           })

@@ -11,7 +11,7 @@ class NotificationsController extends Controller
 {
     public function getNotifications()
     {
-        $notifications = Notification::where('user_id', auth()->user()->id)->get();
+        $notifications = Notification::where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->limit(12)->get();
         return NotificationResource::collection($notifications);
     }
 
@@ -41,15 +41,18 @@ class NotificationsController extends Controller
     public function markAsRead($id)
     {
         Notification::find($id)->update([
-            'seen' => true
+            'read' => true
         ]);
+
+        return $this->getNotifications();
     }
 
     public function markAllAsRead()
     {
-        Notification::update([
-            'seen' => true
+        Notification::where('user_id', auth()->user()->id)->update([
+            'read' => true
         ]);
+        return $this->getNotifications();
     }
 
     public function getAuthUserId()
