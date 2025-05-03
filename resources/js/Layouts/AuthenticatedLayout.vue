@@ -4,6 +4,9 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
+import axios from 'axios';
+import { io } from 'socket.io-client';
+
 
 export default {
   components: {
@@ -17,9 +20,10 @@ export default {
     return {
       showingNavigationDropdown: false,
       showingNotifications: false,
+      user_id: 0,
+      message: 'New order #1234 received',
       notifications: [
-        // Sample notifications - you can replace with real data
-        { id: 1, text: 'New order #1234 received', time: '2 mins ago', read: false},
+        { id: 1, message: 'New order #1234 received', created_at: '2 mins ago', seen: false},
       ]
     };
   },
@@ -27,6 +31,36 @@ export default {
     unreadCount() {
       return this.notifications.filter(n => !n.read).length;
     }
+  },
+
+  mounted(){
+    this.getNotifications()
+    axios.get(route('notifications.getAuthUserId')).then((response) => {
+      this.user_id = response.data
+      const socket = io('http://localhost:3000');
+      socket.emit('register', this.user_id);
+      socket.on(`notification:${this.user_id}`, (data) => {
+        console.log("Notification received:", data);
+        this.notifications.push(data);
+      });
+    })
+  },
+
+  methods:{
+    getNotifications() {
+      axios.get(route('notifications.getNotifications'))
+          .then((response) => {
+            this.notifications = response.data.data;
+          });
+    },
+
+    sendNotification(){
+      const formData = new FormData();
+      formData.append('user_id', this.user_id);
+      formData.append('message', this.message);
+
+      axios.post(route('notifications.sendNotification'), formData);
+    },
   }
 };
 </script>
@@ -69,7 +103,7 @@ export default {
             <div class="hidden sm:ms-6 sm:flex sm:items-center">
               <!-- Notifications Dropdown -->
               <div class="relative me-3">
-                <Dropdown align="right" width="72" v-model:show="showingNotifications">
+                <Dropdown align="right" width="500" v-model:show="showingNotifications">
                   <template #trigger>
                     <button
                         type="button"
@@ -105,10 +139,10 @@ export default {
                             </div>
                             <div class="flex-1 min-w-0">
                               <p class="text-sm font-medium text-gray-900 truncate">
-                                {{ notification.text }}
+                                {{ notification.message }}
                               </p>
                               <p class="text-xs text-gray-500 mt-1">
-                                {{ notification.time }}
+                                {{ notification.time_ago }}
                               </p>
                             </div>
                             <div v-if="!notification.read" class="ml-2 flex-shrink-0">
@@ -124,11 +158,6 @@ export default {
                         <h3 class="mt-2 text-sm font-medium text-gray-900">No notifications</h3>
                         <p class="mt-1 text-xs text-gray-500">We'll notify you when something arrives.</p>
                       </div>
-                    </div>
-                    <div class="px-4 py-2 border-t border-gray-200 bg-gray-50 text-center">
-                      <a href="#" class="text-xs font-medium text-blue-600 hover:text-blue-500">
-                        View all notifications
-                      </a>
                     </div>
                   </template>
                 </Dropdown>
@@ -268,6 +297,9 @@ export default {
         </div>
       </header>
 
+      <div>
+        <button class="btn btn-primary" @click="sendNotification">Hello</button>
+      </div>
       <main>
         <slot />
       </main>

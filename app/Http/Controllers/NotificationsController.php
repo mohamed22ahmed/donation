@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\NotificationResource;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class NotificationsController extends Controller
 {
+    public function getNotifications()
+    {
+        $notifications = Notification::where('user_id', auth()->user()->id)->get();
+        return NotificationResource::collection($notifications);
+    }
+
     public function sendNotification(Request $request)
     {
         $message = $request->input('message');
@@ -27,5 +35,24 @@ class NotificationsController extends Controller
         }
 
         return response()->json(['error' => 'Failed to send notification'], 500);
+    }
+
+    public function markAsRead($id)
+    {
+        Notification::find($id)->update([
+            'seen' => true
+        ]);
+    }
+
+    public function markAllAsRead()
+    {
+        Notification::update([
+            'seen' => true
+        ]);
+    }
+
+    public function getAuthUserId()
+    {
+        return auth()->user()->id;
     }
 }

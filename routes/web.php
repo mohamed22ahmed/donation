@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MedicationsController;
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\OffersController;
 use App\Http\Controllers\RatingsController;
@@ -51,7 +52,17 @@ Route::middleware(['auth', 'verified'])
                 Route::get('/orderNow/{id}', 'orderNow')->name('orderNow');
                 Route::post('/rateOrder', 'rateOrder')->name('rateOrder');
                 Route::post('/ask', 'ask')->name('ask')->middleware('throttle:60,1');
-                Route::post('/send-notification', 'sendNotification')->name('sendNotification');
+            });
+
+        Route::controller(NotificationsController::class)
+            ->name('notifications.')
+            ->prefix('notifications')
+            ->group(function () {
+                Route::get('/getAuthUserId', 'getAuthUserId')->name('getAuthUserId');
+                Route::get('/getNotifications', 'getNotifications')->name('getNotifications');
+                Route::post('/sendNotification', 'sendNotification')->name('sendNotification');
+                Route::post('/MarkAsRead', 'MarkAsRead')->name('MarkAsRead');
+                Route::post('/MarkAllAsRead', 'MarkAllAsRead')->name('MarkAllAsRead');
             });
 
         Route::controller(MedicationsController::class)
