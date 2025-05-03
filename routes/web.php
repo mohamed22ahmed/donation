@@ -51,6 +51,7 @@ Route::middleware(['auth', 'verified'])
                 Route::get('/orderNow/{id}', 'orderNow')->name('orderNow');
                 Route::post('/rateOrder', 'rateOrder')->name('rateOrder');
                 Route::post('/ask', 'ask')->name('ask')->middleware('throttle:60,1');
+                Route::post('/send-notification', 'sendNotification')->name('sendNotification');
             });
 
         Route::controller(MedicationsController::class)

@@ -105,5 +105,25 @@ class DashboardController extends Controller
         return $response['response'] ?? 'No reply from model.';
     }
 
+    public function sendNotification(Request $request)
+    {
+        $message = $request->input('message');
+        $userId = $request->input('user_id'); // Specify the user ID
 
+        if (!$userId) {
+            return response()->json(['error' => 'User ID is required'], 400);
+        }
+
+        $response = Http::post('http://localhost:3000/emit', [
+            'event' => 'notification',
+            'data' => ['message' => $message],
+            'userId' => $userId,
+        ]);
+
+        if ($response->successful()) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['error' => 'Failed to send notification'], 500);
+    }
 }
