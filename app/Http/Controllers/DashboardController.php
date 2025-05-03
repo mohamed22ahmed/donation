@@ -7,7 +7,6 @@ use App\Models\Order;
 use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use Inertia\Response;
 
 class DashboardController extends Controller
@@ -106,9 +105,5 @@ class DashboardController extends Controller
         return $response['response'] ?? 'No reply from model.';
     }
 
-    private function cleanResponse(string $response): string
-    {
-        $message = explode('assistant|>', $response)[1] ?? $response;
-        return trim(preg_replace('/\s+/', ' ', $message));
-    }
+
 }
