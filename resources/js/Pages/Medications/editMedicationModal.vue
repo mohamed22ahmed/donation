@@ -5,7 +5,7 @@ export default {
 
   data() {
     return {
-      types: ['tablet', 'injection', 'Syrup'],
+      types: ['tablet', 'injection', 'Syrup', 'Cream'],
       statuses: ['new', 'used'],
       minDate: this.getTodayDate(),
       errorMessage: '',

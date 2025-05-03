@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->integer('price');
             $table->integer('total');
-            $table->enum('type', ['tablet', 'injection', 'Syrup']);
+            $table->enum('type', ['tablet', 'injection', 'Syrup', 'Cream']);
             $table->enum('status', ['used', 'new']);
             $table->string('medication_img')->nullable();
             $table->unsignedBigInteger('user_id');

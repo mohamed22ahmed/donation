@@ -78,7 +78,7 @@ export default {
         <td>{{ offer.id }}</td>
         <td>{{ quantity }}</td>
         <td>{{ offer.price }}</td>
-        <td>{{ offer.user.name }}</td>
+        <td>{{ offer.user.name }} {{ offer.user.phone }}</td>
       </tr>
       </tbody>
     </table>

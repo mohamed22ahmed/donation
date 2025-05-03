@@ -71,7 +71,7 @@ class DashboardController extends Controller
 
     public function orderNow($offer_id)
     {
-        $offer = Offer::find($offer_id)->with('medications')->first();
+        $offer = Offer::find($offer_id)->with(['medications', 'user'])->first();
         $quantity = 0;
         foreach ($offer->medications as $medication) {
             $quantity += $medication->pivot->quantity;
@@ -85,6 +85,16 @@ class DashboardController extends Controller
             'active' => true,
             'status' => 'pending'
         ]);
+
+        if($order){
+            $notification = new NotificationsController();
+            $request = new Request();
+            $request->merge([
+                'user_id' => $offer->user->id,
+                'message' => 'user: '.$offer->user->name.', phone: '.$offer->user->phone.' ordered the offer #'.$offer->id
+            ]);
+            $notification->sendNotification($request);
+        }
 
         Offer::find($offer_id)->update([
             'offered' => true

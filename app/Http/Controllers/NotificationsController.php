@@ -11,7 +11,7 @@ class NotificationsController extends Controller
 {
     public function getNotifications()
     {
-        $notifications = Notification::where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->limit(12)->get();
+        $notifications = Notification::where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->get();
         return NotificationResource::collection($notifications);
     }
 
