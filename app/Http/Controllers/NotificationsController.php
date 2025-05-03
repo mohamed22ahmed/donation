@@ -17,20 +17,21 @@ class NotificationsController extends Controller
 
     public function sendNotification(Request $request)
     {
-        $message = $request->input('message');
-        $userId = $request->input('user_id'); // Specify the user ID
-
-        if (!$userId) {
+        if (!$request->user_id) {
             return response()->json(['error' => 'User ID is required'], 400);
         }
 
         $response = Http::post('http://localhost:3000/emit', [
             'event' => 'notification',
-            'data' => ['message' => $message],
-            'userId' => $userId,
+            'data' => ['message' => $request->message],
+            'userId' => $request->user_id,
         ]);
 
         if ($response->successful()) {
+            Notification::create([
+                'message' => $request->message,
+                'user_id' => $request->user_id
+            ]);
             return response()->json(['success' => true]);
         }
 

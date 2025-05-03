@@ -22,9 +22,7 @@ export default {
       showingNotifications: false,
       user_id: 0,
       message: 'New order #1234 received',
-      notifications: [
-        { id: 1, message: 'New order #1234 received', created_at: '2 mins ago', seen: false},
-      ]
+      notifications: []
     };
   },
   computed: {
