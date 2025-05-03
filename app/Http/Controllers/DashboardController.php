@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NotificationSearch;
 use App\Models\Offer;
 use App\Models\Order;
 use App\Models\Rating;
@@ -41,6 +42,14 @@ class DashboardController extends Controller
 
         $offers = $query->paginate(10);
 
+        if($request->has('search')) {
+            if(!$offers){
+                NotificationSearch::create([
+                    'user_id' => auth()->user()->id,
+                    'search' => $request->search
+                ]);
+            }
+        }
         $offers->getCollection()->transform(function ($offer) {
             $offer->medications->each(function ($medication) {
                 $medication->medication_img = asset('storage/' . $medication->medication_img) ?? asset('storage/medications/default.png');
