@@ -39,7 +39,7 @@ export default {
       socket.emit('register', this.user_id);
       socket.on(`notification:${this.user_id}`, (data) => {
         console.log("Notification received:", data);
-        this.notifications.push(data);
+        this.notifications.unshift(data);
       });
     })
   },
@@ -133,7 +133,7 @@ export default {
                     <div class="max-h-96 overflow-y-auto">
                       <template v-if="notifications.length > 0">
                         <div v-for="notification in notifications" :key="notification.id" class="border-b border-gray-100 last:border-0">
-                          <div class="flex px-4 mt-1 py-3 hover:bg-gray-50 cursor-pointer" :class="{ 'bg-blue-100': !notification.read }" @click="markAsRead(notification.id)">
+                            <div class="flex px-4 mt-1 py-3 hover:bg-gray-50 cursor-pointer" :class="{ 'bg-blue-100': !notification.read }" @click="markAsRead(notification.id)">
                             <div class="flex-shrink-0 mr-3">
                               <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-purple-100">
                                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">

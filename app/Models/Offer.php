@@ -7,12 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Offer extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'price',
-        'active',
-        'offered'
-    ];
+    protected $guarded = [];
 
     public function user()
     {

@@ -20,9 +20,10 @@ class DashboardController extends Controller
     public function getOffers(Request $request)
     {
         $query = Offer::with(['medications', 'user'])
-            ->where('offered', false);
+            ->where('offered', false)
+            ->where('user_id', '!=', auth()->user()->id);
 
-        if($request->has('search')) {
+        if($request->has('search') && $request->search) {
             $searchTerm = $request->search;
             $query->whereHas('medications', function($q) use ($searchTerm) {
                 $q->where('name', 'like', '%' . $searchTerm . '%');
@@ -42,7 +43,7 @@ class DashboardController extends Controller
 
         $offers = $query->paginate(10);
 
-        if($request->has('search')) {
+        if($request->has('search') && $request->search) {
             if(!$offers->total()) {
                 NotificationSearch::create([
                     'user_id' => auth()->user()->id,
@@ -108,6 +109,7 @@ class DashboardController extends Controller
             'model' => 'mistral',
             'prompt' => "Answer very briefly and concisely. " . $request->question,
             'stream' => false,
+            'max_tokens' => 1000,
         ]);
 
         $response = $response->json();

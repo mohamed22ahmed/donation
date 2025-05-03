@@ -68,9 +68,11 @@ class OffersController extends Controller
     private function sendNotificationsToUsers($searchesToNotify){
         foreach ($searchesToNotify as $item) {
             $message = "there's an offer for the medicine #".$item['search']." you searched for before";
+            $id = Notification::max('id');
+            $id = $id ? $id + 1 : 1;
             $response = Http::post('http://localhost:3000/emit', [
                 'event' => 'notification',
-                'data' => ['message' => $message],
+                'data' => ['id'=> $id, 'message' => $message, 'read'=> 0],
                 'userId' => $item['user_id'],
             ]);
 
@@ -107,7 +109,6 @@ class OffersController extends Controller
     public function getMedications($offerId)
     {
         $offerMedications = MedicationOffer::where('offer_id', $offerId)->select('medication_id')->get();
-
         return Medication::where('user_id', auth()->user()->id)
             ->get()
             ->map(function ($medication) use ($offerMedications) {
@@ -167,11 +168,19 @@ class OffersController extends Controller
     public function getNewId()
     {
         $lastId = Offer::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->first();
+        if($lastId == null){
+            Offer::insert([
+                'id' => 1,
+                'user_id' => auth()->user()->id,
+                'price' => 0
+            ]);
+            return 1;
+        }
         if($lastId?->active == false){
             return $lastId?->id;
         }
 
-        if(MedicationOffer::where('offer_id', $lastId?->id)->count() != 0 || $lastId == null){
+        if(MedicationOffer::where('offer_id', $lastId?->id)->count() != 0){
             Offer::insert([
                 'user_id' => auth()->user()->id,
                 'price' => 0
@@ -210,6 +219,8 @@ class OffersController extends Controller
 
     public function getOfferMedications($id)
     {
+        if(!$id)
+            return 'no data';
         $offer = Offer::where('id', $id)
             ->with(['medications' => function ($query) {
                 $query->withPivot('id');
