@@ -9,6 +9,10 @@ export default {
       statuses: ['new', 'used'],
       minDate: this.getTodayDate(),
       errorMessage: '',
+      errorMessagePrice: '',
+      errorMessageQuantity: '',
+
+
       form: {
         name: '',
         price: '',
@@ -67,6 +71,22 @@ export default {
       } else {
         this.errorMessage = '';
       }
+    },
+    validateQuantity(quan) {
+      if (quan <= 0 ) {
+        this.errorMessageQuantity = ' Quantity must be greater than 0.';
+        this.form.quantity = ''; // Clear the selected date
+      } else {
+        this.errorMessageQuantity = '';
+      }
+    },
+    validatePrice(pr) {
+      if (quan < 0 ) {
+        this.errorMessagePrice = ' Price must be greater than or equal 0.';
+        this.form.price = ''; // Clear the selected date
+      } else {
+        this.errorMessagePrice = '';
+      }
     }
   }
 };
@@ -118,7 +138,11 @@ export default {
                     placeholder="Medication Price"
                     class="form-control"
                     required
+                    @change="validatePrice"
+
                 />
+                <p v-if="errorMessagePrice" style="color: red;">{{ errorMessagePrice }}</p>
+
               </div>
             </div>
 
@@ -133,7 +157,10 @@ export default {
                     placeholder="Medication Quantity"
                     class="form-control"
                     required
+                    @change="validateQuantity"
                 />
+                <p v-if="errorMessageQuantity" style="color: red;">{{ errorMessageQuantity }}</p>
+
               </div>
               <div class="col-md-6">
                 <label for="expiry_date" class="form-label">Expiry Date</label>

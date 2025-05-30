@@ -99,10 +99,21 @@ class OffersController extends Controller
     private function updateMedicationQuantityAndTotal($id, $quantity, $addOrSubtract = 'add')
     {
         $medication = Medication::find($id);
-        $medication->quantity = $addOrSubtract == 'subtract' ?
-            $medication->quantity - $quantity :
+        if($addOrSubtract == 'subtract'){ 
+            if ($medication->quantity > $quantity ){
+                $medication->quantity - $quantity ;
+                $medication->total = $medication->quantity * $medication->price;
+            }
+                else {
+                $medication->quantity=0;
+                $medication->total = 0;
+            }
+
+        } else{
             $medication->quantity + $quantity;
-        $medication->total = $medication->quantity * $medication->price;
+            $medication->total = $medication->quantity * $medication->price;
+        }
+        
         $medication->save();
     }
 
@@ -167,7 +178,7 @@ class OffersController extends Controller
 
     public function getNewId()
     {
-        $lastId = Offer::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->first();
+        $lastId = Offer::orderBy('id', 'desc')->first();
         if($lastId == null){
             Offer::insert([
                 'id' => 1,
