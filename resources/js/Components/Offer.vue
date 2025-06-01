@@ -90,6 +90,8 @@ export default {
           <th>Name</th>
           <th>Quantity</th>
           <th>Price</th>
+          <th>Status</th>
+          <th>Type</th>
           <th>Expiry Date</th>
           <th>Picture</th>
         </tr>
@@ -100,6 +102,8 @@ export default {
           <td>{{ medication.name }}</td>
           <td>{{ medication.pivot.quantity }}</td>
           <td>{{ medication.pivot.price }}</td>
+          <td>{{ medication.status }}</td>
+          <td>{{ medication.type }}</td>
           <td>{{medication.expiry_date}}</td>
           <td style="justify-items: center;">
             <img

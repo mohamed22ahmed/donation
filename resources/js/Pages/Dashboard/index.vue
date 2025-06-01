@@ -136,7 +136,7 @@ export default {
         <div class="px-5 pt-5 font-semibold" style="font-size: 30px">Offers</div>
 
         <div class="pt-2 row d-flex flex-wrap" v-if="hasOffers">
-          <div class="col-md-4 p-5 d-flex" v-for="offer in offers.data" :key="offer.id">
+          <div class="col-md-6 p-5 d-flex" v-for="offer in offers.data" :key="offer.id">
             <Offer :offer="offer" class="flex-grow-1" @offer-updated="handleOfferUpdate"/>
           </div>
         </div>
