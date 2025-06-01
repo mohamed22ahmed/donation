@@ -61,29 +61,32 @@ export default {
       const day = String(today.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
     },
+
     validateDate() {
       const selectedDate = new Date(this.form.expiry_date);
       const today = new Date(this.minDate);
 
       if (selectedDate < today) {
         this.errorMessage = 'You cannot select a date before today.';
-        this.form.expiry_date = ''; // Clear the selected date
+        this.form.expiry_date = '';
       } else {
         this.errorMessage = '';
       }
     },
-    validateQuantity(quan) {
-      if (quan <= 0 ) {
-        this.errorMessageQuantity = ' Quantity must be greater than 0.';
-        this.form.quantity = ''; // Clear the selected date
+
+    validateQuantity() {
+      if (this.form.quantity <= 0 ) {
+        this.errorMessageQuantity = 'Quantity must be greater than 0.';
+        this.form.quantity = '';
       } else {
         this.errorMessageQuantity = '';
       }
     },
-    validatePrice(pr) {
-      if (quan < 0 ) {
-        this.errorMessagePrice = ' Price must be greater than or equal 0.';
-        this.form.price = ''; // Clear the selected date
+
+    validatePrice() {
+      if (this.form.price < 0 ) {
+        this.errorMessagePrice = 'Price must be greater than or equal 0.';
+        this.form.price = '';
       } else {
         this.errorMessagePrice = '';
       }
@@ -138,7 +141,7 @@ export default {
                     placeholder="Medication Price"
                     class="form-control"
                     required
-                    @change="validatePrice"
+                    @change="validatePrice()"
 
                 />
                 <p v-if="errorMessagePrice" style="color: red;">{{ errorMessagePrice }}</p>
@@ -157,7 +160,7 @@ export default {
                     placeholder="Medication Quantity"
                     class="form-control"
                     required
-                    @change="validateQuantity"
+                    @input="validateQuantity"
                 />
                 <p v-if="errorMessageQuantity" style="color: red;">{{ errorMessageQuantity }}</p>
 
@@ -220,7 +223,8 @@ export default {
             <!-- Modal Footer -->
             <div class="modal-footer border-top-0">
               <button type="button" class="btn btn-danger" @click="$emit('close')">Close</button>
-              <button type="submit" class="btn btn-primary">Create</button>
+              <button type="submit" class="btn btn-primary" v-if="errorMessage=='' && errorMessageQuantity=='' && errorMessagePrice==''">Create</button>
+              <button type="submit" class="btn btn-secondary" disabled v-else>Create</button>
             </div>
           </form>
         </div>

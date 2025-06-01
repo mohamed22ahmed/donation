@@ -9,6 +9,9 @@ export default {
       statuses: ['new', 'used'],
       minDate: this.getTodayDate(),
       errorMessage: '',
+      errorMessagePrice: '',
+      errorMessageQuantity: '',
+
       form: {
         id: this.medication.id,
         name: this.medication.name,
@@ -68,6 +71,25 @@ export default {
       } else {
         this.errorMessage = '';
       }
+    },
+
+
+    validateQuantity() {
+      if (this.form.quantity <= 0 ) {
+        this.errorMessageQuantity = 'Quantity must be greater than 0.';
+        this.form.quantity = '';
+      } else {
+        this.errorMessageQuantity = '';
+      }
+    },
+
+    validatePrice() {
+      if (this.form.price < 0 ) {
+        this.errorMessagePrice = 'Price must be greater than or equal 0.';
+        this.form.price = '';
+      } else {
+        this.errorMessagePrice = '';
+      }
     }
   }
 };
@@ -119,7 +141,9 @@ export default {
                     placeholder="Medication Price"
                     class="form-control"
                     required
+                    @change="validatePrice()"
                 />
+                <p v-if="errorMessagePrice" style="color: red;">{{ errorMessagePrice }}</p>
               </div>
             </div>
 
@@ -134,7 +158,9 @@ export default {
                     placeholder="Medication Quantity"
                     class="form-control"
                     required
+                    @input="validateQuantity"
                 />
+                <p v-if="errorMessageQuantity" style="color: red;">{{ errorMessageQuantity }}</p>
               </div>
               <div class="col-md-6">
                 <label for="expiry_date" class="form-label">Expiry Date</label>
@@ -195,7 +221,8 @@ export default {
             <!-- Modal Footer -->
             <div class="modal-footer border-top-0">
               <button type="button" class="btn btn-danger" @click="$emit('close')">Close</button>
-              <button type="submit" class="btn btn-success">Update</button>
+              <button type="submit" class="btn btn-success" v-if="errorMessage=='' && errorMessageQuantity=='' && errorMessagePrice==''">Update</button>
+              <button type="submit" class="btn btn-secondary" disabled v-else>Update</button>
             </div>
           </form>
         </div>
