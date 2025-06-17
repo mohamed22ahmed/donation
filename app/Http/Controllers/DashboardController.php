@@ -115,11 +115,11 @@ class DashboardController extends Controller
     public function ask(Request $request): string
     {
         $baseUrl = 'http://localhost:11434';
-        $response = Http::post($baseUrl . '/api/generate', [
+        $response = Http::timeout(120)->post($baseUrl . '/api/generate', [
             'model' => 'mistral',
             'prompt' => "Answer very briefly and concisely. " . $request->question,
             'stream' => false,
-            'max_tokens' => 1000,
+            'max_tokens' => 100,
         ]);
 
         $response = $response->json();
