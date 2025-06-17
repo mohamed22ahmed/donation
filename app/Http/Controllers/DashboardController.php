@@ -90,7 +90,7 @@ class DashboardController extends Controller
             $notification = new NotificationsController();
             $request = new Request();
             $request->merge([
-                'user_id' => $offer->user->id,
+                'user_id' => $offer->user_id,
                 'message' => 'user: '.auth()->user()->name.', phone: '.auth()->user()->phone.' ordered the offer #'.$offer->id
             ]);
             $notification->sendNotification($request);
